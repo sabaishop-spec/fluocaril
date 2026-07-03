@@ -20,9 +20,29 @@ export const products = [
 ];
 
 export const articles = [
-  { id: 'a1', title: 'Cách vệ sinh răng khi đeo mắc cài chuẩn nha khoa', category: 'Đang niềng', date: '12/10/2023', image: 'https://picsum.photos/seed/a1/600/400' },
-  { id: 'a2', title: 'Bàn chải kẽ dùng như thế nào để không tụt lợi?', category: 'Vệ sinh răng miệng', date: '05/11/2023', image: 'https://picsum.photos/seed/a2/600/400' },
-  { id: 'a3', title: 'Làm sạch hàm duy trì đúng cách sau khi tháo niềng', category: 'Sau niềng', date: '20/11/2023', image: 'https://picsum.photos/seed/a3/600/400' },
+  { id: 'a1', title: 'Cách vệ sinh răng khi đeo mắc cài chuẩn nha khoa', category: 'Chăm sóc răng niềng', date: '12/10/2023', image: 'https://picsum.photos/seed/a1/600/400', description: 'Hướng dẫn chi tiết từng bước vệ sinh răng miệng khi niềng răng để tránh sâu răng và viêm nướu hiệu quả.' },
+  { id: 'a2', title: 'Bàn chải kẽ dùng như thế nào để không tụt lợi?', category: 'Vệ sinh đúng cách', date: '05/11/2023', image: 'https://picsum.photos/seed/a2/600/400', description: 'Tìm hiểu cách sử dụng bàn chải kẽ đúng cách để làm sạch các kẽ răng và vùng xung quanh mắc cài an toàn.' },
+  { id: 'a3', title: 'Làm sạch hàm duy trì đúng cách sau khi tháo niềng', category: 'Giai đoạn chỉnh nha', date: '20/11/2023', image: 'https://picsum.photos/seed/a3/600/400', description: 'Bảo quản và vệ sinh hàm duy trì đúng cách để đảm bảo hiệu quả lâu dài sau khi kết thúc quá trình niềng răng.' },
+  { id: 'a4', title: 'Tại sao cần bổ sung Fluoride khi niềng răng?', category: 'Kiến thức tổng quát', date: '01/12/2023', image: 'https://picsum.photos/seed/a4/600/400', description: 'Tầm quan trọng của Fluoride trong việc bảo vệ men răng và ngăn ngừa tình trạng đốm trắng khi mang mắc cài.' },
+  { id: 'a5', title: 'Những thực phẩm nên tránh để không bung mắc cài', category: 'Chăm sóc răng niềng', date: '15/12/2023', image: 'https://picsum.photos/seed/a5/600/400', description: 'Danh sách các loại thực phẩm cứng, dính, dai cần hạn chế để tránh làm bung tuột mắc cài và kéo dài thời gian niềng.' },
+  { id: 'a6', title: 'Giải đáp: Niềng răng có làm yếu răng không?', category: 'Kiến thức tổng quát', date: '10/01/2024', image: 'https://picsum.photos/seed/a6/600/400', description: 'Chuyên gia giải đáp thắc mắc về việc niềng răng có ảnh hưởng đến độ bền chắc của răng trong tương lai hay không.' },
+  { id: 'a7', title: 'Bí quyết giảm đau nhức sau mỗi lần siết răng', category: 'Giai đoạn chỉnh nha', date: '25/01/2024', image: 'https://picsum.photos/seed/a7/600/400', description: 'Các mẹo hữu ích giúp giảm thiểu tình trạng đau nhức và khó chịu sau mỗi lần siết mắc cài định kỳ.' },
+];
+
+export const topViewedArticles = [
+  { id: 't1', title: 'Dùng tăm nước hay bàn chải kẽ tốt hơn cho người niềng răng?' },
+  { id: 't2', title: '5 Dấu hiệu cho thấy bạn cần vệ sinh lấy cao răng ngay lập tức' },
+  { id: 't3', title: 'Nhổ răng khôn khi niềng: Những điều cần lưu ý' },
+  { id: 't4', title: 'Review chi tiết các dòng nước súc miệng cho răng niềng' },
+  { id: 't5', title: 'Xử lý tình huống bung mắc cài tại nhà như thế nào?' },
+];
+
+export const articleCategories = [
+  'Chăm sóc răng niềng',
+  'Kiến thức tổng quát',
+  'Giai đoạn chỉnh nha',
+  'Vệ sinh đúng cách',
+  'Dinh dưỡng nha khoa'
 ];
 
 export const faqs = [

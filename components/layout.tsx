@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Button } from './ui';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
@@ -28,9 +28,9 @@ export function Header() {
         </Link>
         
         <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-slate-700">
-          <Link href="/san-pham" className="hover:text-brand-dark transition-colors">Sản phẩm</Link>
-          <Link href="/cham-soc-theo-giai-doan" className="hover:text-brand-dark transition-colors">Chăm sóc theo giai đoạn</Link>
-          <Link href="/goc-kien-thuc" className="hover:text-brand-dark transition-colors">Góc kiến thức</Link>
+          <Link href="/san-pham" className="hover:text-brand-dark transition-colors flex items-center gap-1">Sản phẩm <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
+          <Link href="/cham-soc-theo-giai-doan" className="hover:text-brand-dark transition-colors flex items-center gap-1">Chăm sóc theo giai đoạn <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
+          <Link href="/goc-kien-thuc" className="hover:text-brand-dark transition-colors flex items-center gap-1">Góc kiến thức <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
         </nav>
         
         <button className="md:hidden p-2 -mr-2 text-navy" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
