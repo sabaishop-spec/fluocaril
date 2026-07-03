@@ -1,4 +1,4 @@
-import { KnowledgeHub, LeadGen } from "@/components/home-sections-2";
+import { KnowledgeHub } from "@/components/home-sections-2";
 
 export default function KnowledgePage() {
   return (
@@ -8,7 +8,6 @@ export default function KnowledgePage() {
         <p className="text-slate-600 text-lg max-w-2xl">Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn mỗi ngày từ các chuyên gia nha khoa.</p>
       </div>
       <KnowledgeHub />
-      <LeadGen />
     </div>
   );
 }

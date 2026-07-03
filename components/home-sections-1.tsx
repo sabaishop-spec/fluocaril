@@ -1,41 +1,96 @@
 "use client";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
-import { motion } from "motion/react";
+import { motion, AnimatePresence } from "motion/react";
 import { Button } from "./ui";
 import { stages, categories, products } from "@/lib/data";
-import { CheckCircle2, Sparkles, Smile, ShieldCheck, ArrowRight } from "lucide-react";
+import { CheckCircle2, Sparkles, Smile, ShieldCheck, ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 export function Hero() {
+  const images = [
+    "https://picsum.photos/seed/dental1/1920/600",
+    "https://picsum.photos/seed/dental2/1920/600",
+    "https://picsum.photos/seed/dental3/1920/600"
+  ];
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % images.length);
+  }, [images.length]);
+
+  const prevSlide = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
+  }, [images.length]);
+
+  useEffect(() => {
+    const timer = setInterval(nextSlide, 5000);
+    return () => clearInterval(timer);
+  }, [nextSlide]);
+
   return (
-    <section className="relative pt-20 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-12 items-center">
+    <section className="relative w-full h-[500px] md:h-[600px] overflow-hidden bg-slate-100 group">
+      <AnimatePresence initial={false} mode="wait">
+        <motion.div
+          key={currentIndex}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="absolute inset-0"
+        >
+          <Image
+            src={images[currentIndex]}
+            alt={`Hero banner ${currentIndex + 1}`}
+            fill
+            className="object-cover"
+            priority={currentIndex === 0}
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      <button
+        onClick={prevSlide}
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/30 hover:bg-white/60 backdrop-blur-md flex items-center justify-center text-white md:opacity-0 group-hover:opacity-100 transition-opacity z-10"
+      >
+        <ChevronLeft className="w-6 h-6 text-slate-800" />
+      </button>
+      <button
+        onClick={nextSlide}
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white/30 hover:bg-white/60 backdrop-blur-md flex items-center justify-center text-white md:opacity-0 group-hover:opacity-100 transition-opacity z-10"
+      >
+        <ChevronRight className="w-6 h-6 text-slate-800" />
+      </button>
+
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+        {images.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentIndex(i)}
+            className={`w-2.5 h-2.5 rounded-full transition-all ${
+              i === currentIndex ? "bg-white w-8" : "bg-white/60"
+            }`}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function HeroIntro() {
+  return (
+    <section className="py-20 bg-white">
+      <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}>
-          <span className="inline-block py-1 px-3 rounded-full bg-brand-light text-brand-dark text-sm font-semibold mb-6">Giải pháp nha khoa chuyên nghiệp</span>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-navy leading-tight mb-6">
-            Chăm răng niềng đúng cách, tự tin trọn hành trình.
+          <span className="inline-block py-1 px-4 rounded-full bg-brand-light text-brand-dark text-sm font-semibold mb-6">Giải pháp nha khoa chuyên nghiệp</span>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-navy leading-tight mb-6">
+            Chăm răng niềng đúng cách,<br />tự tin trọn hành trình.
           </h1>
-          <p className="text-lg text-slate-600 mb-8 max-w-lg leading-relaxed">
+          <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
             Khám phá hệ sinh thái chăm sóc răng miệng chuyên biệt giúp làm sạch hiệu quả quanh mắc cài, chăm sóc hơi thở và bảo vệ thành quả chỉnh nha mỗi ngày.
           </p>
-          <div className="flex flex-wrap gap-4">
-            <Button size="lg" className="rounded-full text-base font-semibold">Khám phá sản phẩm</Button>
-            <Button size="lg" variant="outline" className="rounded-full text-base font-semibold">Tìm chu trình phù hợp</Button>
-          </div>
-        </motion.div>
-        <motion.div initial={{opacity:0, scale:0.95}} animate={{opacity:1, scale:1}} transition={{duration:0.6, delay:0.2}} className="relative">
-          <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl relative">
-            <Image src="https://picsum.photos/seed/smilebraces/800/600" alt="Người niềng răng tự tin" fill className="object-cover" />
-          </div>
-          <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-2xl shadow-xl max-w-xs hidden md:block">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-brand-light text-brand-dark rounded-full flex items-center justify-center">
-                 <ShieldCheck className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="font-bold text-navy font-display">Bảo vệ toàn diện</p>
-                <p className="text-sm text-slate-500">Cho mọi giai đoạn chỉnh nha</p>
-              </div>
-            </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Button size="lg" className="rounded-full text-base font-semibold bg-brand hover:bg-brand-dark text-white border-0 px-8">Khám phá sản phẩm</Button>
+            <Button size="lg" variant="outline" className="rounded-full text-base font-semibold text-navy hover:bg-slate-50 border-slate-200 px-8">Tìm chu trình phù hợp</Button>
           </div>
         </motion.div>
       </div>
@@ -124,28 +179,25 @@ export function Categories() {
 
 export function FeaturedProducts() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Sản phẩm nổi bật</h2>
-          <p className="text-slate-600 max-w-2xl mx-auto text-lg">Những giải pháp được chuyên gia khuyên dùng và khách hàng yêu thích nhất.</p>
+          <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Dịch vụ & Sản phẩm tiêu biểu</h2>
+          <p className="text-slate-600 max-w-2xl mx-auto text-lg">Hệ sinh thái chăm sóc răng miệng chuyên biệt mang đến nụ cười hoàn hảo.</p>
         </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((prod, i) => (
-            <div key={prod.id} className="group flex flex-col h-full">
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-50 mb-6">
+            <div key={prod.id} className="group flex flex-col h-full bg-[#84EF6E] rounded-3xl p-6 md:p-8 shadow-sm hover:shadow-xl transition-all duration-300 hover:scale-105">
+              <div className="relative aspect-square bg-slate-50 rounded-2xl overflow-hidden mb-6">
                 <Image src={prod.image} alt={prod.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
-                <div className="absolute top-4 left-4 bg-white/90 backdrop-blur text-xs font-bold px-3 py-1 rounded-full text-brand-dark">
+                <div className="absolute top-4 left-4 bg-slate-900 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
                   {prod.stage}
                 </div>
               </div>
-              <div className="flex-1 flex flex-col">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">{prod.category}</p>
-                <h3 className="text-lg font-bold text-navy mb-2 font-display">{prod.name}</h3>
-                <p className="text-sm text-slate-500 mb-4">{prod.benefit}</p>
-                <div className="mt-auto pt-4 flex gap-2">
-                  <Button className="flex-1" variant="default">Mua chính hãng</Button>
-                </div>
+              <div className="flex-1 flex flex-col text-center">
+                <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">{prod.category}</p>
+                <h3 className="text-lg font-bold text-slate-900 mb-3 font-display group-hover:text-black transition-colors line-clamp-2">{prod.name}</h3>
+                <p className="text-sm text-slate-800 mb-0 line-clamp-2 leading-relaxed">{prod.benefit}</p>
               </div>
             </div>
           ))}
