@@ -31,9 +31,6 @@ export function WhySpecialized() {
         <div className="grid gap-6">
           {reasons.map((r, i) => (
              <div key={i} className="flex gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
-               <div className="w-12 h-12 shrink-0 bg-brand-light text-brand-dark rounded-full flex items-center justify-center">
-                 <CheckCircle2 className="w-6 h-6" />
-               </div>
                <div>
                  <h3 className="font-bold text-navy font-serif text-lg mb-2">{r.title}</h3>
                  <p className="text-slate-600 text-sm leading-relaxed">{r.desc}</p>
