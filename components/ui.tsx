@@ -41,7 +41,7 @@ export const Accordion = ({ items }: { items: { title: string; content: React.Re
       {items.map((item, idx) => (
         <div key={idx} className="border border-slate-200 rounded-2xl overflow-hidden bg-white shadow-sm hover:border-slate-300 transition-colors">
           <button
-            className="w-full px-6 py-5 flex items-center justify-between font-semibold text-left text-navy font-display text-lg"
+            className="w-full px-6 py-5 flex items-center justify-between font-semibold text-left text-navy font-serif text-lg"
             onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
           >
             {item.title}

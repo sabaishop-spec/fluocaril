@@ -10,7 +10,7 @@ export default function KnowledgePage() {
   return (
     <div className="pt-24 pb-20 bg-slate-50 min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-        <h1 className="text-4xl md:text-5xl font-display font-bold text-navy mb-6">Góc kiến thức</h1>
+        <h1 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-6">Góc kiến thức</h1>
         <p className="text-slate-600 text-lg max-w-2xl">Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn mỗi ngày từ các chuyên gia nha khoa.</p>
       </div>
 
@@ -35,7 +35,7 @@ export default function KnowledgePage() {
                     <span className="bg-brand/10 text-brand-dark px-3 py-1 rounded-full">{featured.category}</span>
                     <span className="text-slate-400">{featured.date}</span>
                   </div>
-                  <h2 className="text-2xl lg:text-3xl font-bold text-navy leading-snug group-hover:text-brand transition-colors font-display mb-4">
+                  <h2 className="text-2xl lg:text-3xl font-bold text-navy leading-snug group-hover:text-brand transition-colors font-serif mb-4">
                     {featured.title}
                   </h2>
                   <p className="text-slate-600 leading-relaxed mb-6 line-clamp-3">
@@ -68,7 +68,7 @@ export default function KnowledgePage() {
                   </div>
                   <div className="p-6 flex flex-col flex-1">
                     <span className="text-slate-400 text-xs font-semibold mb-3 block">{article.date}</span>
-                    <h3 className="text-xl font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-display mb-3 line-clamp-2">
+                    <h3 className="text-xl font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-serif mb-3 line-clamp-2">
                       {article.title}
                     </h3>
                     <p className="text-slate-500 text-sm line-clamp-2 mb-4 leading-relaxed">
@@ -102,7 +102,7 @@ export default function KnowledgePage() {
               
               {/* Block 1: Categories */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold text-navy font-display mb-4 pb-4 border-b border-slate-100">Danh mục kiến thức</h3>
+                <h3 className="text-lg font-bold text-navy font-serif mb-4 pb-4 border-b border-slate-100">Danh mục kiến thức</h3>
                 <ul className="space-y-2">
                   {articleCategories.map((cat, idx) => (
                     <li key={idx}>
@@ -119,11 +119,11 @@ export default function KnowledgePage() {
 
               {/* Block 2: Most Viewed */}
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
-                <h3 className="text-lg font-bold text-navy font-display mb-4 pb-4 border-b border-slate-100">Xem nhiều nhất</h3>
+                <h3 className="text-lg font-bold text-navy font-serif mb-4 pb-4 border-b border-slate-100">Xem nhiều nhất</h3>
                 <ul className="space-y-4">
                   {topViewedArticles.map((article, idx) => (
                     <li key={article.id} className="flex gap-4 group cursor-pointer">
-                      <span className="text-2xl font-bold font-display text-brand/30 group-hover:text-brand transition-colors">
+                      <span className="text-2xl font-bold font-serif text-brand/30 group-hover:text-brand transition-colors">
                         {(idx + 1).toString().padStart(2, '0')}
                       </span>
                       <h4 className="text-sm font-semibold text-slate-700 leading-snug group-hover:text-navy transition-colors line-clamp-3 mt-1.5">

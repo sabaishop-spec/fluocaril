@@ -1,5 +1,5 @@
 import { Hero, HeroIntro, FeaturedProducts } from "@/components/home-sections-1";
-import { WhySpecialized, CareRoutine, KnowledgeHub, FaqSection } from "@/components/home-sections-2";
+import { WhySpecialized, CareRoutine, KnowledgeHub } from "@/components/home-sections-2";
 
 export default function Home() {
   return (
@@ -10,7 +10,6 @@ export default function Home() {
       <WhySpecialized />
       <CareRoutine />
       <KnowledgeHub />
-      <FaqSection />
     </>
   );
 }

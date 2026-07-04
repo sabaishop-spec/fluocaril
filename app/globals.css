@@ -7,7 +7,7 @@
   --color-navy: #0A192F;
   --color-sky-soft: #F0F8FF;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-lora), ui-serif, Georgia, serif;
 }
 
 body {
@@ -15,5 +15,5 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  @apply text-navy font-semibold tracking-tight font-display;
+  @apply text-navy font-semibold tracking-tight font-serif;
 }

@@ -17,7 +17,7 @@ export function WhySpecialized() {
     <section className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-16 items-center">
         <div>
-          <h2 className="text-3xl md:text-4xl font-display font-bold mb-6 text-navy">Tại sao người niềng răng cần sản phẩm chuyên biệt?</h2>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-navy">Tại sao người niềng răng cần sản phẩm chuyên biệt?</h2>
           <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
             <p>
               Khí cụ chỉnh nha (mắc cài, dây cung) tạo ra nhiều &quot;điểm mù&quot; mà bàn chải thông thường khó làm sạch. Thức ăn dễ dắt lại gây mảng bám, tụt lợi, đốm trắng và hơi thở kém thơm tho.
@@ -35,7 +35,7 @@ export function WhySpecialized() {
                  <CheckCircle2 className="w-6 h-6" />
                </div>
                <div>
-                 <h3 className="font-bold text-navy font-display text-lg mb-2">{r.title}</h3>
+                 <h3 className="font-bold text-navy font-serif text-lg mb-2">{r.title}</h3>
                  <p className="text-slate-600 text-sm leading-relaxed">{r.desc}</p>
                </div>
              </div>
@@ -57,15 +57,15 @@ export function CareRoutine() {
     <section className="py-24 bg-[#84EF6E] text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-slate-900 mb-4">Chu trình 3 bước chuẩn chuyên gia</h2>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Chu trình 3 bước chuẩn chuyên gia</h2>
           <p className="text-slate-800 max-w-2xl mx-auto text-lg">Đơn giản, dễ áp dụng và mang lại hiệu quả tối ưu cho người niềng răng.</p>
         </div>
         <div className="flex flex-col md:flex-row gap-6">
           {steps.map((step, i) => (
              <div key={i} className="flex-1 bg-white/90 backdrop-blur-sm border border-white/50 rounded-2xl p-8 hover:shadow-md transition-shadow flex flex-col xl:flex-row gap-6 items-start">
-                <span className="text-6xl font-bold font-display text-slate-900 leading-none">{step.num}</span>
+                <span className="text-6xl font-bold font-serif text-slate-900 leading-none">{step.num}</span>
                 <div>
-                   <h3 className="text-xl font-bold text-slate-900 mb-3 font-display">{step.title}</h3>
+                   <h3 className="text-xl font-bold text-slate-900 mb-3 font-serif">{step.title}</h3>
                    <p className="text-slate-800 leading-relaxed text-sm">{step.desc}</p>
                 </div>
              </div>
@@ -85,7 +85,7 @@ export function KnowledgeHub() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Tin tức & Góc kiến thức</h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Tin tức & Góc kiến thức</h2>
             <p className="text-slate-600 max-w-xl text-lg">Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn mỗi ngày.</p>
           </div>
           <Button variant="ghost" className="rounded-full text-brand-dark shrink-0">
@@ -103,7 +103,7 @@ export function KnowledgeHub() {
                 <span className="text-brand-dark">{featured.category}</span>
                 <span className="text-slate-400">{featured.date}</span>
              </div>
-             <h3 className="text-2xl font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-display mb-4">{featured.title}</h3>
+             <h3 className="text-2xl font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-serif mb-4">{featured.title}</h3>
              <p className="text-slate-600 line-clamp-3 leading-relaxed">Bộ tài liệu tổng hợp từ các chuyên gia nha khoa hàng đầu, hướng dẫn chi tiết cách vệ sinh, lựa chọn sản phẩm phù hợp và chế độ ăn uống chuẩn nhất dành riêng cho người niềng răng để đạt hiệu quả tối ưu nhất...</p>
           </div>
           
@@ -118,27 +118,13 @@ export function KnowledgeHub() {
                       <div className="flex items-center gap-3 text-[10px] font-semibold uppercase tracking-wider mb-2">
                         <span className="text-brand-dark">{article.category}</span>
                       </div>
-                      <h3 className="text-base font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-display line-clamp-2">{article.title}</h3>
+                      <h3 className="text-base font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-serif line-clamp-2">{article.title}</h3>
                       <span className="text-slate-400 text-xs mt-2 block">{article.date}</span>
                    </div>
                 </div>
              ))}
           </div>
         </div>
-      </div>
-    </section>
-  );
-}
-
-export function FaqSection() {
-  return (
-    <section className="py-24 bg-slate-50">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Câu hỏi thường gặp</h2>
-          <p className="text-slate-600 text-lg">Giải đáp những thắc mắc phổ biến về sản phẩm và chu trình chăm sóc.</p>
-        </div>
-        <Accordion items={faqs.map(f => ({ title: f.question, content: f.answer }))} />
       </div>
     </section>
   );

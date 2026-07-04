@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter, Be_Vietnam_Pro } from 'next/font/google';
+import { Inter, Lora } from 'next/font/google';
 import './globals.css';
 import { Header, Footer } from "@/components/layout";
 
-const inter = Inter({ subsets: ['vietnamese'], variable: '--font-inter' });
-const beVietnam = Be_Vietnam_Pro({ weight: ['400', '500', '600', '700'], subsets: ['vietnamese'], variable: '--font-display' });
+const inter = Inter({ subsets: ['latin', 'vietnamese'], weight: ['400', '500', '600'], variable: '--font-inter' });
+const lora = Lora({ weight: ['500', '600', '700'], subsets: ['latin', 'vietnamese'], variable: '--font-lora' });
 
 export const metadata: Metadata = {
   title: 'Chăm Sóc Răng Niềng Chuyên Biệt | Fluocaril',
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="vi" className={`${inter.variable} ${beVietnam.variable}`}>
+    <html lang="vi" className={`${inter.variable} ${lora.variable}`}>
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>

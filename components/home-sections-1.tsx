@@ -82,7 +82,7 @@ export function HeroIntro() {
       <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.div initial={{opacity:0, y:20}} animate={{opacity:1, y:0}} transition={{duration:0.6}}>
           <span className="inline-block py-1 px-4 rounded-full bg-brand-light text-brand-dark text-sm font-semibold mb-6">Giải pháp nha khoa chuyên nghiệp</span>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-navy leading-tight mb-6">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-navy leading-tight mb-6">
             Chăm răng niềng đúng cách,<br />tự tin trọn hành trình.
           </h1>
           <p className="text-lg md:text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
@@ -125,7 +125,7 @@ export function ShopByStage() {
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Bạn đang ở giai đoạn nào?</h2>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Bạn đang ở giai đoạn nào?</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">Mỗi giai đoạn chỉnh nha cần một giải pháp chăm sóc khác biệt. Hãy chọn hành trình của bạn.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -136,7 +136,7 @@ export function ShopByStage() {
                 <div className="w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                   {Icon && <Icon className="w-8 h-8 text-brand-dark" />}
                 </div>
-                <h3 className="text-xl font-bold text-navy mb-3 font-display">{stage.title}</h3>
+                <h3 className="text-xl font-bold text-navy mb-3 font-serif">{stage.title}</h3>
                 <p className="text-slate-500 text-sm leading-relaxed mb-6">{stage.desc}</p>
                 <div className="flex items-center justify-center text-brand-dark font-medium group-hover:underline">
                   Tìm hiểu thêm <ArrowRight className="w-4 h-4 ml-1" />
@@ -156,7 +156,7 @@ export function Categories() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
           <div>
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Hệ sinh thái sản phẩm</h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Hệ sinh thái sản phẩm</h2>
             <p className="text-slate-600 max-w-xl text-lg">Khám phá các dòng sản phẩm được thiết kế tối ưu để làm sạch các vùng khó tiếp cận.</p>
           </div>
           <Button variant="outline" className="rounded-full shrink-0">Xem tất cả</Button>
@@ -167,7 +167,7 @@ export function Categories() {
               <Image src={cat.image} alt={cat.name} fill className="object-cover transition-transform duration-700 group-hover:scale-105" />
               <div className="absolute inset-0 bg-gradient-to-t from-navy/80 via-navy/20 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <h3 className="text-white font-bold text-xl font-display group-hover:text-brand transition-colors">{cat.name}</h3>
+                <h3 className="text-white font-bold text-xl font-serif group-hover:text-brand transition-colors">{cat.name}</h3>
               </div>
             </motion.div>
           ))}
@@ -182,7 +182,7 @@ export function FeaturedProducts() {
     <section className="py-24 bg-slate-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-navy mb-4">Dịch vụ & Sản phẩm tiêu biểu</h2>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Dịch vụ & Sản phẩm tiêu biểu</h2>
           <p className="text-slate-600 max-w-2xl mx-auto text-lg">Hệ sinh thái chăm sóc răng miệng chuyên biệt mang đến nụ cười hoàn hảo.</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -196,7 +196,7 @@ export function FeaturedProducts() {
               </div>
               <div className="flex-1 flex flex-col text-center">
                 <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-2">{prod.category}</p>
-                <h3 className="text-lg font-bold text-slate-900 mb-3 font-display group-hover:text-black transition-colors line-clamp-2">{prod.name}</h3>
+                <h3 className="text-lg font-bold text-slate-900 mb-3 font-serif group-hover:text-black transition-colors line-clamp-2">{prod.name}</h3>
                 <p className="text-sm text-slate-800 mb-0 line-clamp-2 leading-relaxed">{prod.benefit}</p>
               </div>
             </div>

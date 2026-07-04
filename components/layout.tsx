@@ -7,11 +7,11 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 
 const Logo = ({ className }: { className?: string }) => (
-  <svg viewBox="0 0 400 120" className={cn("h-8 sm:h-10 w-auto", className)} aria-label="Fluocaril Logo">
-    <path d="M40 25 L380 25 Q210 40 40 30 Z" fill="#84EF6E" />
-    <text x="210" y="90" fontFamily="sans-serif" fontStyle="italic" fontWeight="900" fontSize="72" textAnchor="middle" fill="#000" letterSpacing="-1">Fluocaril</text>
-    <path d="M35 105 L360 105 L355 120 L30 120 Z" fill="#84EF6E" />
-  </svg>
+  <img 
+    src="https://assets.unileversolutions.com/v1/38775417.png?im=Resize,width=768,height=768" 
+    alt="Fluocaril Logo" 
+    className={cn("h-10 sm:h-12 w-auto object-contain", className)} 
+  />
 );
 
 export function Header() {
@@ -28,9 +28,34 @@ export function Header() {
         </Link>
         
         <nav className="hidden md:flex items-center gap-8 font-medium text-sm text-slate-700">
-          <Link href="/san-pham" className="hover:text-brand-dark transition-colors flex items-center gap-1">Sản phẩm <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
-          <Link href="/cham-soc-theo-giai-doan" className="hover:text-brand-dark transition-colors flex items-center gap-1">Chăm sóc theo giai đoạn <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
-          <Link href="/goc-kien-thuc" className="hover:text-brand-dark transition-colors flex items-center gap-1">Góc kiến thức <ChevronDown className="w-4 h-4 text-slate-400" /></Link>
+          <div className="relative group cursor-pointer">
+            <Link href="/san-pham" className="hover:text-brand-dark transition-colors flex items-center gap-1">
+              Sản phẩm <ChevronDown className="w-4 h-4 text-slate-400" />
+            </Link>
+            <div className="absolute top-full left-0 pt-4 hidden group-hover:flex flex-col z-50 min-w-[240px] transition-all duration-300">
+              <div className="bg-white shadow-xl rounded-xl p-3 border border-slate-100 flex flex-col">
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Kem đánh răng chuyên dụng</Link>
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Nước súc miệng kháng khuẩn</Link>
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Bàn chải kẽ rãnh V</Link>
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Làm sạch khay & hàm duy trì</Link>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative group cursor-pointer">
+            <Link href="/goc-kien-thuc" className="hover:text-brand-dark transition-colors flex items-center gap-1">
+              Góc kiến thức <ChevronDown className="w-4 h-4 text-slate-400" />
+            </Link>
+            <div className="absolute top-full left-0 pt-4 hidden group-hover:flex flex-col z-50 min-w-[240px] transition-all duration-300">
+              <div className="bg-white shadow-xl rounded-xl p-3 border border-slate-100 flex flex-col">
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Kiến thức chỉnh nha tổng quát</Link>
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Hướng dẫn vệ sinh đúng cách</Link>
+                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Dinh dưỡng cho răng niềng</Link>
+              </div>
+            </div>
+          </div>
+
+          <Link href="/cau-hoi-thuong-gap" className="hover:text-brand-dark transition-colors flex items-center gap-1">Câu hỏi thường gặp</Link>
         </nav>
         
         <button className="md:hidden p-2 -mr-2 text-navy" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
@@ -48,8 +73,8 @@ export function Header() {
           >
             <div className="px-4 py-6 flex flex-col gap-4 font-medium text-navy">
               <Link href="/san-pham" className="py-2 border-b border-slate-50">Sản phẩm</Link>
-              <Link href="/cham-soc-theo-giai-doan" className="py-2 border-b border-slate-50">Chăm sóc theo giai đoạn</Link>
               <Link href="/goc-kien-thuc" className="py-2 border-b border-slate-50">Góc kiến thức</Link>
+              <Link href="/cau-hoi-thuong-gap" className="py-2 border-b border-slate-50">Câu hỏi thường gặp</Link>
             </div>
           </motion.div>
         )}
@@ -70,9 +95,23 @@ export function Footer() {
             <p className="text-sm text-slate-500 leading-relaxed mb-6">
               Thương hiệu chăm sóc răng miệng chuyên biệt đồng hành cùng người dùng trong từng giai đoạn chỉnh nha.
             </p>
+            <ul className="space-y-2 text-sm text-slate-400">
+              <li className="flex items-start gap-2">
+                <i className="fas fa-map-marker-alt mt-0.5 shrink-0"></i>
+                <span>Tòa nhà ABC, Đường XYZ, Hà Nội</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <i className="fas fa-phone-alt shrink-0"></i>
+                <span>1900 1234</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <i className="fas fa-envelope shrink-0"></i>
+                <span>contact@fluocaril.vn</span>
+              </li>
+            </ul>
           </div>
           <div>
-            <h4 className="font-bold text-navy mb-4 font-display">Sản phẩm</h4>
+            <h4 className="font-bold text-navy mb-4 font-serif">Sản phẩm</h4>
             <ul className="space-y-3 text-sm text-slate-600">
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Kem đánh răng</Link></li>
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Nước súc miệng</Link></li>
@@ -81,7 +120,7 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-navy mb-4 font-display">Chăm sóc chỉnh nha</h4>
+            <h4 className="font-bold text-navy mb-4 font-serif">Chăm sóc chỉnh nha</h4>
             <ul className="space-y-3 text-sm text-slate-600">
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Sắp niềng</Link></li>
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Đang niềng</Link></li>
@@ -90,8 +129,9 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-navy mb-4 font-display">Thông tin pháp lý & Hỗ trợ</h4>
+            <h4 className="font-bold text-navy mb-4 font-serif">Thông tin pháp lý & Hỗ trợ</h4>
             <ul className="space-y-3 text-sm text-slate-600 mb-6">
+              <li><Link href="/cau-hoi-thuong-gap" className="hover:text-brand-dark transition-colors">Câu hỏi thường gặp</Link></li>
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Chính sách bảo mật</Link></li>
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Điều khoản sử dụng</Link></li>
             </ul>
