@@ -11,6 +11,8 @@ import { RelatedProducts } from "./RelatedProducts";
 import { ShareButton } from "./ShareButton";
 import { ProductAccordion } from "./ProductAccordion";
 
+export const dynamic = 'force-dynamic';
+
 type Props = {
   params: Promise<{ slug: string }>;
 };

@@ -25,6 +25,7 @@ function CatalogContent({ products, categories }: { products: any[], categories:
 
   // Reset visibleCount when filters change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setVisibleCount(12);
   }, [searchQuery, searchParams]);
 
@@ -32,6 +33,7 @@ function CatalogContent({ products, categories }: { products: any[], categories:
     try {
       const stored = localStorage.getItem("recentSearches");
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setRecentSearches(JSON.parse(stored));
       }
     } catch (e) {

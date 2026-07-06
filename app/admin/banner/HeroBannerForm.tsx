@@ -154,7 +154,7 @@ export default function HeroBannerForm({ currentData }: { currentData: any }) {
 
       {slides.length === 0 && (
         <div className="text-center p-8 bg-gray-50 rounded-xl border border-dashed border-gray-300">
-          <p className="text-gray-500">Chưa có banner nào. Hãy bấm "Thêm Slide mới".</p>
+          <p className="text-gray-500">Chưa có banner nào. Hãy bấm &quot;Thêm Slide mới&quot;.</p>
         </div>
       )}
 

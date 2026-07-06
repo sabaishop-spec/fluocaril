@@ -20,7 +20,9 @@ const nextConfig: NextConfig = {
     ],
   },
   transpilePackages: ['motion'],
+  serverExternalPackages: ['pg'],
   experimental: {
+    optimizePackageImports: ['lucide-react'],
     serverActions: {
       bodySizeLimit: '5mb',
     },
