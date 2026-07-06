@@ -1,9 +1,9 @@
 "use client";
 import Image from "next/image";
-import { motion } from "motion/react";
+
 import { Button, Accordion } from "./ui";
 import { faqs, articles } from "@/lib/data";
-import { ArrowRight, CheckCircle2 } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 export function WhySpecialized() {
   const reasons = [

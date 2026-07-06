@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'motion/react';
 
 const Logo = ({ className }: { className?: string }) => (
+  // eslint-disable-next-line @next/next/no-img-element
   <img 
     src="https://assets.unileversolutions.com/v1/38775417.png?im=Resize,width=768,height=768" 
     alt="Fluocaril Logo" 
@@ -14,7 +15,7 @@ const Logo = ({ className }: { className?: string }) => (
   />
 );
 
-export function Header() {
+export function Header({ categories = [] }: { categories?: any[] }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -34,10 +35,15 @@ export function Header() {
             </Link>
             <div className="absolute top-full left-0 pt-4 hidden group-hover:flex flex-col z-50 min-w-[240px] transition-all duration-300">
               <div className="bg-white shadow-xl rounded-xl p-3 border border-slate-100 flex flex-col">
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Kem đánh răng chuyên dụng</Link>
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Nước súc miệng kháng khuẩn</Link>
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Bàn chải kẽ rãnh V</Link>
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Làm sạch khay & hàm duy trì</Link>
+                {categories.length > 0 ? categories.map((cat) => (
+                  <Link key={cat.id} href={`/san-pham?category=${cat.id}`} className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">
+                    {cat.name}
+                  </Link>
+                )) : (
+                  <>
+                    <Link href="/san-pham" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Tất cả sản phẩm</Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

@@ -1,5 +1,5 @@
 import { db } from '@/src/db';
-import { products } from '@/src/db/schema';
+import { products, categories } from '@/src/db/schema';
 import { desc } from 'drizzle-orm';
 import ProductForm from './ProductForm';
 import DeleteButton from './DeleteButton';
@@ -8,12 +8,13 @@ export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
   const productsList = await db.select().from(products).orderBy(desc(products.createdAt));
+  const categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
 
   return (
     <div>
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900">Quản lý Sản phẩm</h1>
-        <ProductForm />
+        <ProductForm categories={categoriesList} />
       </div>
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -23,7 +24,8 @@ export default async function ProductsPage() {
               <tr className="bg-gray-50 border-b border-gray-100 text-sm font-semibold text-gray-600">
                 <th className="px-6 py-4">Hình ảnh</th>
                 <th className="px-6 py-4">Tên sản phẩm</th>
-                <th className="px-6 py-4">Danh mục</th>
+                <th className="px-6 py-4">Hệ sinh thái</th>
+                <th className="px-6 py-4">Danh mục cũ</th>
                 <th className="px-6 py-4">Trạng thái</th>
                 <th className="px-6 py-4 text-right">Hành động</th>
               </tr>
@@ -53,13 +55,15 @@ export default async function ProductsPage() {
                       <div className="font-medium text-gray-900">{product.name}</div>
                       <div className="text-sm text-gray-500 mt-1">{product.slug}</div>
                     </td>
+                    <td className="px-6 py-4 text-gray-600">{categoriesList.find(c => c.id === product.categoryId)?.name || '—'}</td>
                     <td className="px-6 py-4 text-gray-600">{product.category || '—'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${product.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                         {product.status || 'Active'}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-6 py-4 text-right flex items-center justify-end space-x-2">
+                      <ProductForm product={product} categories={categoriesList} />
                       <DeleteButton id={product.id} />
                     </td>
                   </tr>

@@ -1,0 +1,247 @@
+import Image from "next/image";
+import { db } from '@/src/db';
+import { products, categories as categoriesTable } from '@/src/db/schema';
+import { eq, and, ne } from 'drizzle-orm';
+import { notFound } from 'next/navigation';
+import { ChevronRight, Check } from "lucide-react";
+import Link from "next/link";
+import type { Metadata } from 'next';
+import Script from "next/script";
+import { RelatedProducts } from "./RelatedProducts";
+import { ShareButton } from "./ShareButton";
+import { ProductAccordion } from "./ProductAccordion";
+
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const productList = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
+  const product = productList[0];
+  
+  if (!product) {
+    return { title: 'Sản phẩm không tìm thấy' };
+  }
+
+  return {
+    title: `${product.name} | Fluocaril`,
+    description: product.description || `Sản phẩm ${product.name} từ Fluocaril`,
+  };
+}
+
+export default async function ProductDetailPage({ params }: Props) {
+  const { slug } = await params;
+  const productList = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
+  const product = productList[0];
+
+  if (!product) {
+    notFound();
+  }
+
+  const categoryList = product.categoryId 
+    ? await db.select().from(categoriesTable).where(eq(categoriesTable.id, product.categoryId)).limit(1) 
+    : [];
+  const category = categoryList[0];
+
+  const relatedProductsList = product.categoryId 
+    ? await db.select().from(products)
+        .where(
+          and(
+            eq(products.categoryId, product.categoryId),
+            ne(products.id, product.id)
+          )
+        )
+        .limit(4)
+    : [];
+
+  const accordionItems = [
+    {
+      title: 'Thành phần',
+      content: (
+        <ul className="list-disc pl-5 space-y-1">
+          <li>Sodium Fluoride (1480ppm) giúp tái khoáng hóa men răng.</li>
+          <li>Thành phần kháng khuẩn giúp giảm mảng bám.</li>
+          <li>Chiết xuất tự nhiên dịu nhẹ cho nướu nhạy cảm.</li>
+          <li>Không chứa cồn (đối với nước súc miệng), an toàn khi sử dụng hàng ngày.</li>
+        </ul>
+      )
+    },
+    {
+      title: 'Thông số sản phẩm',
+      content: (
+        <div className="space-y-2">
+          <p><span className="font-medium text-slate-700">Dung tích / Trọng lượng:</span> Thay đổi theo sản phẩm (VD: 100ml, 150g, 500ml)</p>
+          <p><span className="font-medium text-slate-700">Xuất xứ thương hiệu:</span> Pháp</p>
+          <p><span className="font-medium text-slate-700">Đối tượng sử dụng:</span> Người lớn và trẻ em trên 12 tuổi, đặc biệt dành cho người đang niềng răng, chỉnh nha.</p>
+          <p><span className="font-medium text-slate-700">Hạn sử dụng:</span> Xem trên bao bì sản phẩm.</p>
+        </div>
+      )
+    },
+    {
+      title: 'Hướng dẫn sử dụng',
+      content: (
+        <p>
+          Sử dụng 2 lần mỗi ngày (sáng và tối) hoặc sau các bữa ăn. Đối với kem đánh răng, lấy một lượng vừa đủ lên bàn chải và chải đều các mặt răng. Đối với nước súc miệng, ngậm và súc trong khoảng 30 giây rồi nhổ bỏ, không cần súc lại với nước.
+        </p>
+      )
+    }
+  ];
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    image: product.imageUrl || 'https://picsum.photos/seed/placeholder/400/533',
+    description: product.description || `Sản phẩm ${product.name} chuyên biệt cho người niềng răng.`,
+    brand: {
+      '@type': 'Brand',
+      name: 'Fluocaril'
+    },
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'VND',
+      price: '0',
+      availability: 'https://schema.org/InStock',
+      url: `https://fluocaril.com.vn/san-pham/${product.slug}`
+    }
+  };
+
+  return (
+    <div className="bg-white pb-20">
+      <Script
+        id="product-jsonld"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      
+      {/* Product Detail Content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto px-4 py-8">
+        {/* Left Column (Image) */}
+        <div>
+          <div className="relative aspect-square md:aspect-[3/4] bg-[#f8f8f8] rounded-2xl overflow-hidden shadow-sm">
+            <Image
+              src={product.imageUrl || "https://picsum.photos/seed/placeholder/600/800"}
+              alt={product.name}
+              fill
+              className="object-cover"
+              priority
+            />
+          </div>
+        </div>
+
+        {/* Right Column (Details) */}
+        <div className="flex flex-col">
+          {/* Breadcrumb Navigation */}
+          <nav className="flex text-sm text-slate-500 mb-6" aria-label="Breadcrumb">
+            <ol className="inline-flex items-center space-x-1 md:space-x-2">
+              <li className="inline-flex items-center">
+                <Link href="/" className="hover:text-slate-900 transition-colors">
+                  Trang chủ
+                </Link>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <ChevronRight className="w-4 h-4 text-slate-400 mx-1" />
+                  <Link href="/san-pham" className="hover:text-slate-900 transition-colors">
+                    Sản phẩm
+                  </Link>
+                </div>
+              </li>
+              {category && (
+                <li>
+                  <div className="flex items-center">
+                    <ChevronRight className="w-4 h-4 text-slate-400 mx-1" />
+                    <Link href={`/san-pham?category=${category.id}`} className="hover:text-slate-900 transition-colors">
+                      {category.name}
+                    </Link>
+                  </div>
+                </li>
+              )}
+              <li>
+                <div className="flex items-center">
+                  <ChevronRight className="w-4 h-4 text-slate-400 mx-1" />
+                  <span className="text-slate-900 font-medium line-clamp-1">
+                    {product.name}
+                  </span>
+                </div>
+              </li>
+            </ol>
+          </nav>
+
+          {/* Badge */}
+          {product.badge && (
+            <div className="mb-4">
+              <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider shadow-sm ${
+                product.badge === 'new' ? 'bg-blue-100 text-blue-700' : 
+                product.badge === 'best-seller' ? 'bg-red-100 text-red-700' : 'bg-slate-100 text-slate-900'
+              }`}>
+                {product.badge === 'new' ? 'MỚI' :
+                 product.badge === 'best-seller' ? 'BÁN CHẠY' : product.badge}
+              </span>
+            </div>
+          )}
+
+          {/* Title */}
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-900 mt-2 font-serif">
+            {product.name}
+          </h1>
+          
+          {/* Description */}
+          <p className="leading-relaxed text-slate-600 mt-6 font-sans text-base whitespace-pre-line">
+            {product.description || "Chưa có mô tả chi tiết cho sản phẩm này. Fluocaril mang đến các giải pháp chuyên biệt giúp bảo vệ và chăm sóc sức khỏe răng miệng tối ưu trong suốt quá trình chỉnh nha."}
+          </p>
+          
+          <ProductAccordion items={accordionItems} />
+
+          <div className="space-y-4 mt-8 mb-8">
+            <div className="flex items-start">
+              <div className="flex-shrink-0 mt-1 bg-green-100 rounded-full p-1 text-green-600">
+                <Check className="w-4 h-4" />
+              </div>
+              <div className="ml-3">
+                <h4 className="text-sm font-medium text-slate-900">Sản phẩm chính hãng Fluocaril</h4>
+                <p className="text-sm text-slate-500 mt-1">Đảm bảo nguồn gốc xuất xứ và chất lượng.</p>
+              </div>
+            </div>
+            <div className="flex items-start">
+              <div className="flex-shrink-0 mt-1 bg-green-100 rounded-full p-1 text-green-600">
+                <Check className="w-4 h-4" />
+              </div>
+              <div className="ml-3">
+                <h4 className="text-sm font-medium text-slate-900">Chuyên biệt cho người niềng răng</h4>
+                <p className="text-sm text-slate-500 mt-1">Công thức độc quyền giúp làm sạch sâu và bảo vệ men răng.</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 mt-auto">
+            {product.shopeeUrl ? (
+              <a
+                href={product.shopeeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-[#ee4d2d] hover:bg-[#d74326] text-white text-base font-bold py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"
+              >
+                Mua ngay trên Shopee
+              </a>
+            ) : (
+              <button className="flex-1 bg-navy text-white text-base font-semibold py-4 rounded-xl shadow-lg shadow-navy/20 hover:bg-navy/90 hover:-translate-y-0.5 transition-all">
+                Liên hệ tư vấn
+              </button>
+            )}
+            <ShareButton 
+              title={product.name} 
+              text={product.description || `Sản phẩm ${product.name} từ Fluocaril`}
+              url={`https://fluocaril.com.vn/san-pham/${product.slug}`} 
+            />
+          </div>
+        </div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <RelatedProducts products={relatedProductsList} />
+      </div>
+    </div>
+  );
+}

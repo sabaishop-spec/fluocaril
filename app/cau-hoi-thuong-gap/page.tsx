@@ -1,5 +1,12 @@
 import { Accordion } from "@/components/ui";
 import { faqs } from "@/lib/data";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Câu Hỏi Thường Gặp | Fluocaril',
+  description: 'Giải đáp các thắc mắc phổ biến về sản phẩm và phương pháp chăm sóc răng niềng cùng Fluocaril.',
+};
+
 
 export default function FaqPage() {
   return (

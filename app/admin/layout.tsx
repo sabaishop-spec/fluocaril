@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Package, FileText, Users } from 'lucide-react';
+import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
@@ -19,6 +19,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Package className="w-5 h-5 mr-3" />
             <span className="font-medium">Quản lý Sản phẩm</span>
           </Link>
+          <Link href="/admin/categories" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            <Tags className="w-5 h-5 mr-3" />
+            <span className="font-medium">Danh mục sản phẩm</span>
+          </Link>
           <Link href="/admin/posts" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
             <FileText className="w-5 h-5 mr-3" />
             <span className="font-medium">Quản lý Bài viết</span>
@@ -26,6 +30,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <Link href="/admin/contacts" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
             <Users className="w-5 h-5 mr-3" />
             <span className="font-medium">Khách hàng liên hệ</span>
+          </Link>
+          <Link href="/admin/banner" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            <ImageIcon className="w-5 h-5 mr-3" />
+            <span className="font-medium">Cấu hình Banner</span>
           </Link>
         </nav>
       </aside>

@@ -2,6 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { articles, articleCategories, topViewedArticles } from "@/lib/data";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Góc Kiến Thức Chăm Sóc Răng Niềng | Fluocaril',
+  description: 'Các bài viết, chia sẻ kinh nghiệm và hướng dẫn từ chuyên gia về cách vệ sinh, chăm sóc răng miệng khi niềng.',
+};
+
 
 export default function KnowledgePage() {
   const featured = articles[0];

@@ -1,5 +1,12 @@
 import { ShopByStage } from "@/components/home-sections-1";
 import { CareRoutine, WhySpecialized } from "@/components/home-sections-2";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Chăm Sóc Răng Theo Giai Đoạn Niềng | Fluocaril',
+  description: 'Hướng dẫn cách chăm sóc răng niềng hiệu quả cho từng giai đoạn chỉnh nha với bộ sản phẩm Fluocaril.',
+};
+
 
 export default function StagesPage() {
   return (
