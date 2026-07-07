@@ -8,7 +8,12 @@ import Image from 'next/image';
 export const dynamic = "force-dynamic";
 
 export default async function CategoriesPage() {
-  const categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
+  let categoriesList: any[] = [];
+  try {
+    categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
+  } catch (error) {
+    console.error("Database error:", error);
+  }
 
   return (
     <div>
@@ -33,7 +38,7 @@ export default async function CategoriesPage() {
                 categoriesList.map((category) => (
                   <tr key={category.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
-                      {category.imageUrl ? (
+                      {category.imageUrl && category.imageUrl !== "" ? (
                         <div className="relative w-16 h-16 rounded overflow-hidden border border-gray-100">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 

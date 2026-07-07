@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 import * as schema from './schema';
 
 export const createPool = () => {
-  if (process.env.DATABASE_URL) {
+  if (process.env.DATABASE_URL && process.env.DATABASE_URL.startsWith('postgres')) {
     return new Pool({
       connectionString: process.env.DATABASE_URL,
       connectionTimeoutMillis: 15000,

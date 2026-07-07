@@ -7,7 +7,7 @@ const sqlDbName = process.env.SQL_DB_NAME;
 const user = process.env.SQL_ADMIN_USER;
 const password = process.env.SQL_ADMIN_PASSWORD;
 
-export default defineConfig(databaseUrl ? {
+export default defineConfig(databaseUrl && databaseUrl.startsWith('postgres') ? {
   schema: "./src/db/schema.ts",
   out: "./drizzle",
   dialect: "postgresql",

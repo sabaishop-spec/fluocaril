@@ -7,8 +7,14 @@ import DeleteButton from './DeleteButton';
 export const dynamic = "force-dynamic";
 
 export default async function ProductsPage() {
-  const productsList = await db.select().from(products).orderBy(desc(products.createdAt));
-  const categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
+  let productsList: any[] = [];
+  let categoriesList: any[] = [];
+  try {
+    productsList = await db.select().from(products).orderBy(desc(products.createdAt));
+    categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
+  } catch (error) {
+    console.error("Database error:", error);
+  }
 
   return (
     <div>
@@ -35,7 +41,7 @@ export default async function ProductsPage() {
                 productsList.map((product) => (
                   <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
-                      {product.imageUrl ? (
+                      {product.imageUrl && product.imageUrl !== "" ? (
                         <div className="relative w-16 h-16 rounded overflow-hidden border border-gray-100">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img 

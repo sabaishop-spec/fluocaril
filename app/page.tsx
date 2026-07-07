@@ -14,11 +14,17 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function Home() {
-  const heroSetting = await db.select().from(siteSettings).where(eq(siteSettings.key, 'home_hero_banner')).limit(1);
-  const heroData = heroSetting[0]?.value || null;
-
-  const productsList = await db.select().from(products).orderBy(desc(products.createdAt)).limit(4);
-  const categoriesList = await db.select().from(categories);
+  let heroData = null;
+  let productsList: any[] = [];
+  let categoriesList: any[] = [];
+  try {
+    const heroSetting = await db.select().from(siteSettings).where(eq(siteSettings.key, 'home_hero_banner')).limit(1);
+    heroData = heroSetting[0]?.value || null;
+    productsList = await db.select().from(products).orderBy(desc(products.createdAt)).limit(4);
+    categoriesList = await db.select().from(categories);
+  } catch (error) {
+    console.error("Database connection error in Home:", error);
+  }
   const productsWithCategory = productsList.map(p => {
     const cat = categoriesList.find(c => c.id === p.categoryId);
     return {

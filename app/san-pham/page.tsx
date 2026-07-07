@@ -17,8 +17,14 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
-  const productsList = await db.select().from(products).orderBy(desc(products.createdAt));
-  const categoriesList = await db.select().from(categoriesTable).orderBy(desc(categoriesTable.createdAt));
+  let productsList: any[] = [];
+  let categoriesList: any[] = [];
+  try {
+    productsList = await db.select().from(products).orderBy(desc(products.createdAt));
+    categoriesList = await db.select().from(categoriesTable).orderBy(desc(categoriesTable.createdAt));
+  } catch (error) {
+    console.error("Database error in ProductsPage:", error);
+  }
   
   const productsWithCategory = productsList.map(p => {
     const cat = categoriesList.find(c => c.id === p.categoryId);

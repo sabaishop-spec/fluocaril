@@ -189,7 +189,7 @@ export function FeaturedProducts({ items }: { items?: any[] }) {
                     </div>
                   )}
                   <Image
-                    src={product.imageUrl}
+                    src={product.imageUrl || "https://picsum.photos/seed/placeholder/400/533"}
                     alt={product.name}
                     fill
                     className="object-cover p-8 group-hover:scale-110 transition-transform duration-500"
