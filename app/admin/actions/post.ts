@@ -16,7 +16,9 @@ export async function createPost(formData: FormData) {
 
     if (thumbnailFile && thumbnailFile.size > 0) {
       const { put } = await import('@vercel/blob');
-      const blob = await put(thumbnailFile.name, thumbnailFile, {
+      const { sanitizeFilename } = await import('@/lib/utils');
+      const cleanFilename = sanitizeFilename(thumbnailFile.name);
+      const blob = await put(cleanFilename, thumbnailFile, {
         access: 'public',
         addRandomSuffix: true
       });
@@ -60,7 +62,9 @@ export async function updatePost(id: number, formData: FormData) {
 
     if (thumbnailFile && thumbnailFile.size > 0) {
       const { put } = await import('@vercel/blob');
-      const blob = await put(thumbnailFile.name, thumbnailFile, {
+      const { sanitizeFilename } = await import('@/lib/utils');
+      const cleanFilename = sanitizeFilename(thumbnailFile.name);
+      const blob = await put(cleanFilename, thumbnailFile, {
         access: 'public',
         addRandomSuffix: true
       });

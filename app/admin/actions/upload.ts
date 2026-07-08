@@ -1,6 +1,7 @@
 'use server';
 
 import { put } from '@vercel/blob';
+import { sanitizeFilename } from '@/lib/utils';
 
 export async function uploadImage(formData: FormData) {
   try {
@@ -13,12 +14,15 @@ export async function uploadImage(formData: FormData) {
       return { success: false, error: 'File không phải là hình ảnh' };
     }
 
+    const cleanFilename = sanitizeFilename(file.name);
+
     // upload to Vercel Blob
-    const blob = await put(file.name, file, {
+    const blob = await put(cleanFilename, file, {
       access: 'public',
       addRandomSuffix: true,
       multipart: true,
     });
+
 
     return { success: true, url: blob.url };
   } catch (error: any) {

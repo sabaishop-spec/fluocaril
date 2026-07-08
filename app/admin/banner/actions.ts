@@ -21,7 +21,9 @@ export async function updateHeroBanner(formData: FormData) {
       const imageFile = formData.get(`imageFile_${i}`) as File;
       if (imageFile && imageFile.size > 0) {
         const { put } = await import('@vercel/blob');
-        const blob = await put(imageFile.name, imageFile, {
+        const { sanitizeFilename } = await import('@/lib/utils');
+        const cleanFilename = sanitizeFilename(imageFile.name);
+        const blob = await put(cleanFilename, imageFile, {
           access: 'public',
           addRandomSuffix: true,
           multipart: true,
