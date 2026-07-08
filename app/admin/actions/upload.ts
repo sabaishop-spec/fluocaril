@@ -1,0 +1,26 @@
+'use server';
+
+import { put } from '@vercel/blob';
+
+export async function uploadImage(formData: FormData) {
+  try {
+    const file = formData.get('file') as File;
+    if (!file) {
+      return { success: false, error: 'Không tìm thấy file' };
+    }
+
+    if (!file.type.startsWith('image/')) {
+      return { success: false, error: 'File không phải là hình ảnh' };
+    }
+
+    // upload to Vercel Blob
+    const blob = await put(file.name, file, {
+      access: 'public',
+    });
+
+    return { success: true, url: blob.url };
+  } catch (error: any) {
+    console.error('Error uploading image:', error);
+    return { success: false, error: error.message || 'Lỗi khi tải ảnh lên' };
+  }
+}

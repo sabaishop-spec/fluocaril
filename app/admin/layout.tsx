@@ -23,7 +23,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <Tags className="w-5 h-5 mr-3" />
             <span className="font-medium">Danh mục sản phẩm</span>
           </Link>
-          <Link href="/admin/posts" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+          <Link href="/admin/articles" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
             <FileText className="w-5 h-5 mr-3" />
             <span className="font-medium">Quản lý Bài viết</span>
           </Link>
