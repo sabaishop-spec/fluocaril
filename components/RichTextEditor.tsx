@@ -3,6 +3,10 @@
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import ImageExtension from '@tiptap/extension-image';
+import { Table } from '@tiptap/extension-table';
+import { TableRow } from '@tiptap/extension-table-row';
+import { TableHeader } from '@tiptap/extension-table-header';
+import { TableCell } from '@tiptap/extension-table-cell';
 import { useEffect, useState } from 'react';
 import { uploadImage } from '@/app/admin/actions/upload';
 import { Loader2 } from 'lucide-react';
@@ -55,6 +59,12 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
         inline: true,
         allowBase64: false, // Disallow base64
       }),
+      Table.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content,
     editorProps: {
@@ -157,6 +167,63 @@ const RichTextEditor = ({ content, onChange }: RichTextEditorProps) => {
         >
           Blockquote
         </button>
+        <div className="h-6 w-px bg-gray-300 mx-1 self-center"></div>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().insertTable({ rows: 3, cols: 3, withHeaderRow: true }).run()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200"
+        >
+          Chèn Bảng
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().addColumnAfter().run()}
+          disabled={!editor.can().addColumnAfter()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          + Cột
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().deleteColumn().run()}
+          disabled={!editor.can().deleteColumn()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          - Cột
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().addRowAfter().run()}
+          disabled={!editor.can().addRowAfter()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          + Hàng
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().deleteRow().run()}
+          disabled={!editor.can().deleteRow()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          - Hàng
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().mergeCells().run()}
+          disabled={!editor.can().mergeCells()}
+          className="px-2 py-1 rounded text-sm font-medium bg-white text-gray-700 hover:bg-gray-200 disabled:opacity-50"
+        >
+          Gộp ô
+        </button>
+        <button
+          type="button"
+          onClick={() => editor.chain().focus().deleteTable().run()}
+          disabled={!editor.can().deleteTable()}
+          className="px-2 py-1 rounded text-sm font-medium bg-red-50 text-red-600 hover:bg-red-100 disabled:opacity-50"
+        >
+          Xóa bảng
+        </button>
+        <div className="h-6 w-px bg-gray-300 mx-1 self-center"></div>
         <div className="relative">
           <input
             type="file"

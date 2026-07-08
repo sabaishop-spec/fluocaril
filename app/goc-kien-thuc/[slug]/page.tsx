@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
   return {
     title: `${post.title} | Góc Kiến Thức`,
-    description: post.content?.replace(/<[^>]*>?/gm, '').substring(0, 160) || 'Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn.',
+    description: post.metaDescription || post.content?.replace(/<[^>]*>?/gm, '').substring(0, 160) || 'Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn.',
   };
 }
 

@@ -43,6 +43,7 @@ export const posts = pgTable('posts', {
   content: text('content'),
   author: text('author'),
   thumbnail: text('thumbnail'),
+  metaDescription: text('meta_description'),
   status: text('status').default('Draft'),
   createdAt: timestamp('created_at').defaultNow(),
 });

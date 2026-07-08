@@ -23,6 +23,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     content: initialData?.content || '',
     author: initialData?.author || '',
     thumbnail: initialData?.thumbnail || '',
+    meta_description: initialData?.metaDescription || '',
     status: initialData?.status || 'Draft',
   });
 
@@ -125,7 +126,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -210,6 +211,18 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
             required
           />
         </div>
+        
+        <div className="md:col-span-2">
+          <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả SEO (Meta Description)</label>
+          <textarea
+            name="meta_description"
+            value={formData.meta_description || ''}
+            onChange={handleChange}
+            placeholder="Nhập mô tả ngắn (khoảng 150-160 ký tự) để hiển thị trên kết quả tìm kiếm Google..."
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand transition-colors h-24 resize-y"
+          />
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Đường dẫn (Slug)</label>
           <input
