@@ -17,6 +17,8 @@ import {
   ChevronRight,
 } from "lucide-react";
 
+import { ProductImage } from "./ProductImage";
+
 export function Hero({ data }: { data?: any }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   
@@ -189,11 +191,10 @@ export function FeaturedProducts({ items }: { items?: any[] }) {
                       </span>
                     </div>
                   )}
-                  <Image
+                  <ProductImage
                     src={product.imageUrl || "https://picsum.photos/seed/placeholder/400/533"}
                     alt={product.name}
-                    fill
-                    className="object-cover p-8 group-hover:scale-110 transition-transform duration-500"
+                    className="p-8 group-hover:scale-110"
                   />
                 </div>
                 <div className="p-6 flex flex-col flex-grow">

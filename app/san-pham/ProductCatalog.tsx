@@ -11,6 +11,8 @@ import { useState, useEffect, useRef } from "react";
 import { Search, ChevronDown, ChevronRight, Clock, X, Eye, SlidersHorizontal } from "lucide-react";
 import { QuickViewModal } from "./QuickViewModal";
 
+import { ProductImage } from "@/components/ProductImage";
+
 function CatalogContent({ products, categories }: { products: any[], categories: any[] }) {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -454,11 +456,10 @@ function CatalogContent({ products, categories }: { products: any[], categories:
               >
                 {/* Image Box */}
                 <div className="relative aspect-[3/4] bg-[#f8f8f8] rounded-xl overflow-hidden mb-3">
-                <Image
+                <ProductImage
                   src={prod.imageUrl || prod.image || "https://picsum.photos/seed/placeholder/400/533"}
                   alt={prod.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="group-hover:scale-105"
                 />
 
                 {/* Badge / Tag */}

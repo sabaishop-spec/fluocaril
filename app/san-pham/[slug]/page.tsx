@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ProductImage } from "@/components/ProductImage";
 import { db } from '@/src/db';
 import { products, categories as categoriesTable } from '@/src/db/schema';
 import { eq, and, ne } from 'drizzle-orm';
@@ -128,11 +128,9 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* Left Column (Image) */}
         <div>
           <div className="relative aspect-square md:aspect-[3/4] bg-[#f8f8f8] rounded-2xl overflow-hidden shadow-sm">
-            <Image
+            <ProductImage
               src={product.imageUrl || "https://picsum.photos/seed/placeholder/600/800"}
               alt={product.name}
-              fill
-              className="object-cover"
               priority
             />
           </div>

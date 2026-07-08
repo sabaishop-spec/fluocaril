@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "motion/react";
-import Image from "next/image";
+import { ProductImage } from "@/components/ProductImage";
 import { X, Check } from "lucide-react";
 import { useEffect } from "react";
 import Link from "next/link";
@@ -39,11 +39,9 @@ export function QuickViewModal({ product, onClose }: { product: any; onClose: ()
 
           {/* Image Section */}
           <div className="w-full md:w-1/2 bg-[#f8f8f8] relative min-h-[300px] md:min-h-[400px] shrink-0">
-            <Image
+            <ProductImage
               src={product.imageUrl || product.image || "https://picsum.photos/seed/placeholder/400/533"}
               alt={product.name}
-              fill
-              className="object-cover"
             />
             {product.badge && (
               <div className={cn(

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import { ProductImage } from "@/components/ProductImage";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
@@ -22,11 +22,10 @@ export function RelatedProducts({ products }: { products: any[] }) {
             <div className="h-full flex flex-col rounded-2xl bg-white p-1 pb-3 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-300 hover:scale-[1.02]">
               {/* Image Box */}
               <div className="relative aspect-[3/4] bg-[#f8f8f8] rounded-xl overflow-hidden mb-3">
-                <Image
+                <ProductImage
                   src={prod.imageUrl || prod.image || "https://picsum.photos/seed/placeholder/400/533"}
                   alt={prod.name}
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="group-hover:scale-105"
                 />
                 {/* Badge / Tag */}
                 {prod.badge && (

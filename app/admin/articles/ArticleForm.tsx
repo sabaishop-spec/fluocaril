@@ -4,7 +4,8 @@ import { useState, useTransition, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import RichTextEditor from '@/components/RichTextEditor';
 import { createPost, updatePost } from '@/app/admin/actions/post';
-import { Upload } from 'lucide-react';
+import { uploadImage } from '@/app/admin/actions/upload';
+import { Upload, Loader2 } from 'lucide-react';
 
 interface ArticleFormProps {
   initialData?: any;
@@ -26,6 +27,8 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
 
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
   
+  const [isProcessingFile, setIsProcessingFile] = useState(false);
+
   const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -33,16 +36,59 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     setFormData(prev => ({ ...prev, thumbnail: objectUrl }));
   };
 
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
+    setIsProcessingFile(true);
+    
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       const htmlContent = event.target?.result as string;
       if (htmlContent) {
-        setFormData(prev => ({ ...prev, content: htmlContent }));
+        try {
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(htmlContent, 'text/html');
+          const images = doc.querySelectorAll('img');
+          
+          const uploadPromises = Array.from(images).map(async (img) => {
+            const src = img.getAttribute('src');
+            if (src && src.startsWith('data:image/')) {
+              try {
+                // Convert base64 to Blob
+                const res = await fetch(src);
+                const blob = await res.blob();
+                
+                const mimeType = blob.type;
+                const ext = mimeType.split('/')[1] || 'png';
+                const fileObj = new File([blob], `embedded-${Date.now()}.${ext}`, { type: mimeType });
+                
+                const uploadFormData = new FormData();
+                uploadFormData.append('file', fileObj);
+                
+                const uploadResult = await uploadImage(uploadFormData);
+                if (uploadResult.success && uploadResult.url) {
+                  img.setAttribute('src', uploadResult.url);
+                }
+              } catch (error) {
+                console.error('Error uploading embedded image:', error);
+              }
+            }
+          });
+          
+          await Promise.all(uploadPromises);
+          
+          const cleanedHtmlString = doc.body.innerHTML;
+          setFormData(prev => ({ ...prev, content: cleanedHtmlString }));
+        } catch (error) {
+          console.error('Error processing HTML file:', error);
+          setFormData(prev => ({ ...prev, content: htmlContent }));
+        }
       }
+      setIsProcessingFile(false);
+    };
+    reader.onerror = () => {
+      setIsProcessingFile(false);
     };
     reader.readAsText(file);
     
@@ -186,10 +232,20 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
             <button 
               type="button" 
               onClick={() => fileInputRef.current?.click()}
-              className="flex items-center gap-1.5 text-sm px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors font-medium"
+              disabled={isProcessingFile}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-md transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Upload className="w-4 h-4" />
-              Tải lên tệp .html
+              {isProcessingFile ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Đang xử lý ảnh...
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" />
+                  Tải lên tệp .html
+                </>
+              )}
             </button>
           </div>
         </div>
