@@ -26,29 +26,11 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
 
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
   
-  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    
-    setIsUploadingThumbnail(true);
-    try {
-      const uploadData = new FormData();
-      uploadData.append('file', file);
-      
-      const { uploadImage } = await import('@/app/admin/actions/upload');
-      const result = await uploadImage(uploadData);
-      
-      if (result.success && result.url) {
-        setFormData(prev => ({ ...prev, thumbnail: result.url }));
-      } else {
-        alert(result.error || 'Upload failed');
-      }
-    } catch (error) {
-      console.error('Error uploading thumbnail:', error);
-      alert('Upload failed');
-    } finally {
-      setIsUploadingThumbnail(false);
-    }
+    const objectUrl = URL.createObjectURL(file);
+    setFormData(prev => ({ ...prev, thumbnail: objectUrl }));
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,7 +101,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                   <label className="cursor-pointer bg-white text-gray-900 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-50">
                     Thay đổi ảnh
-                    <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
+                    <input type="file" name="thumbnail" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
                   </label>
                 </div>
               </div>
@@ -137,12 +119,12 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
                     <span className="text-xs text-gray-500 mt-1">PNG, JPG, GIF lên đến 5MB</span>
                   </>
                 )}
-                <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
+                <input type="file" name="thumbnail" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
               </label>
             )}
           </div>
           {/* Hidden input to store the thumbnail URL for FormData */}
-          <input type="hidden" name="thumbnail" value={formData.thumbnail} />
+          <input type="hidden" name="existing_thumbnail" value={initialData?.thumbnail || ''} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Tiêu đề</label>

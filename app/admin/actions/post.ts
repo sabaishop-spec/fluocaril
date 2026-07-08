@@ -11,7 +11,17 @@ export async function createPost(formData: FormData) {
     const author = formData.get('author') as string;
     const status = formData.get('status') as string;
     const content = formData.get('content') as string;
-    const thumbnail = formData.get('thumbnail') as string;
+    const thumbnailFile = formData.get('thumbnail') as File | null;
+    let thumbnailUrl = (formData.get('existing_thumbnail') as string) || '';
+
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      const { put } = await import('@vercel/blob');
+      const blob = await put(thumbnailFile.name, thumbnailFile, {
+        access: 'public',
+        addRandomSuffix: true
+      });
+      thumbnailUrl = blob.url;
+    }
     
     // basic validation
     if (!title || !slug) {
@@ -24,7 +34,7 @@ export async function createPost(formData: FormData) {
       author,
       status: status || 'Draft',
       content,
-      thumbnail,
+      thumbnail: thumbnailUrl,
     });
 
     revalidatePath('/goc-kien-thuc');
@@ -45,7 +55,17 @@ export async function updatePost(id: number, formData: FormData) {
     const author = formData.get('author') as string;
     const status = formData.get('status') as string;
     const content = formData.get('content') as string;
-    const thumbnail = formData.get('thumbnail') as string;
+    const thumbnailFile = formData.get('thumbnail') as File | null;
+    let thumbnailUrl = (formData.get('existing_thumbnail') as string) || '';
+
+    if (thumbnailFile && thumbnailFile.size > 0) {
+      const { put } = await import('@vercel/blob');
+      const blob = await put(thumbnailFile.name, thumbnailFile, {
+        access: 'public',
+        addRandomSuffix: true
+      });
+      thumbnailUrl = blob.url;
+    }
     
     // basic validation
     if (!title || !slug) {
@@ -59,7 +79,7 @@ export async function updatePost(id: number, formData: FormData) {
       author,
       status: status || 'Draft',
       content,
-      thumbnail,
+      thumbnail: thumbnailUrl,
     }).where(eq(posts.id, id));
 
     revalidatePath('/goc-kien-thuc');
