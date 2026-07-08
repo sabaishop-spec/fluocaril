@@ -22,10 +22,13 @@ export async function createProduct(formData: FormData) {
     
     const imageFile = formData.get('imageFile') as File;
     if (imageFile && imageFile.size > 0) {
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      const base64 = buffer.toString('base64');
-      const mimeType = imageFile.type;
-      imageUrl = `data:${mimeType};base64,${base64}`;
+      const { put } = await import('@vercel/blob');
+      const blob = await put(imageFile.name, imageFile, {
+        access: 'public',
+        addRandomSuffix: true,
+        multipart: true,
+      });
+      imageUrl = blob.url;
     }
 
     await db.insert(products).values({
@@ -66,10 +69,13 @@ export async function updateProduct(id: number, formData: FormData) {
     
     const imageFile = formData.get('imageFile') as File;
     if (imageFile && imageFile.size > 0) {
-      const buffer = Buffer.from(await imageFile.arrayBuffer());
-      const base64 = buffer.toString('base64');
-      const mimeType = imageFile.type;
-      imageUrl = `data:${mimeType};base64,${base64}`;
+      const { put } = await import('@vercel/blob');
+      const blob = await put(imageFile.name, imageFile, {
+        access: 'public',
+        addRandomSuffix: true,
+        multipart: true,
+      });
+      imageUrl = blob.url;
     }
 
     await db.update(products).set({

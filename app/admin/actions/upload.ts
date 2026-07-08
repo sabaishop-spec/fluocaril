@@ -16,6 +16,8 @@ export async function uploadImage(formData: FormData) {
     // upload to Vercel Blob
     const blob = await put(file.name, file, {
       access: 'public',
+      addRandomSuffix: true,
+      multipart: true,
     });
 
     return { success: true, url: blob.url };

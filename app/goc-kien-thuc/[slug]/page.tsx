@@ -80,7 +80,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   }).format(new Date(article.createdAt)) : 'Mới cập nhật';
 
   // Simulated view count
-  const viewCount = Math.floor(Math.random() * 500) + 100;
+  const viewCount = 100 + (slug.length * 10) % 500;
 
   const { toc, html: processedHtml } = generateTOCAndAddIds(article.content || '');
 
