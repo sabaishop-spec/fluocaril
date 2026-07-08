@@ -6,6 +6,7 @@ import RichTextEditor from '@/components/RichTextEditor';
 import { createPost, updatePost } from '@/app/admin/actions/post';
 import { uploadImage } from '@/app/admin/actions/upload';
 import { Upload, Loader2 } from 'lucide-react';
+import mammoth from 'mammoth';
 
 interface ArticleFormProps {
   initialData?: any;
@@ -66,11 +67,14 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const htmlContent = event.target?.result as string;
-      if (htmlContent) {
+      const arrayBuffer = event.target?.result as ArrayBuffer;
+      if (arrayBuffer) {
         try {
+          const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+          const htmlString = result.value;
+          
           const parser = new DOMParser();
-          const doc = parser.parseFromString(htmlContent, 'text/html');
+          const doc = parser.parseFromString(htmlString, 'text/html');
           const images = doc.querySelectorAll('img');
           
           const uploadPromises = Array.from(images).map(async (img) => {
@@ -83,7 +87,9 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
                 
                 const mimeType = blob.type;
                 const ext = mimeType.split('/')[1] || 'png';
-                const fileObj = new File([blob], `embedded-${Date.now()}.${ext}`, { type: mimeType });
+                const { sanitizeFilename } = await import('@/lib/utils');
+                const cleanFilename = sanitizeFilename(`embedded-${Date.now()}.${ext}`);
+                const fileObj = new File([blob], cleanFilename, { type: mimeType });
                 
                 const uploadFormData = new FormData();
                 uploadFormData.append('file', fileObj);
@@ -104,7 +110,6 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
           setFormData(prev => ({ ...prev, content: cleanedHtmlString }));
         } catch (error) {
           console.error('Error processing HTML file:', error);
-          setFormData(prev => ({ ...prev, content: htmlContent }));
         }
       }
       setIsProcessingFile(false);
@@ -112,7 +117,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     reader.onerror = () => {
       setIsProcessingFile(false);
     };
-    reader.readAsText(file);
+    reader.readAsArrayBuffer(file);
     
     // Reset file input
     if (fileInputRef.current) {
@@ -246,7 +251,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
           <div>
             <input 
               type="file" 
-              accept=".html,.txt" 
+              accept=".docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document" 
               className="hidden" 
               ref={fileInputRef} 
               onChange={handleFileUpload} 
@@ -265,7 +270,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
               ) : (
                 <>
                   <Upload className="w-4 h-4" />
-                  Tải lên tệp .html
+                  Tải lên tệp Word (.docx)
                 </>
               )}
             </button>
