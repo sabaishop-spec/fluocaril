@@ -70,7 +70,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
   const recentArticles = await db.query.posts.findMany({
     where: eq(posts.status, 'Published'),
     orderBy: [desc(posts.createdAt)],
-    limit: 5,
+    limit: 10,
   });
 
   const displayDate = article.createdAt ? new Intl.DateTimeFormat('vi-VN', {
@@ -174,6 +174,34 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 />
               </div>
             </article>
+
+            {/* Related Articles */}
+            <div className="mt-12">
+              <h3 className="text-2xl font-bold font-serif text-navy mb-6">Bài viết liên quan</h3>
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
+                {recentArticles.filter(a => a.id !== article.id).slice(0, 3).map((related) => (
+                  <Link href={`/goc-kien-thuc/${related.slug}`} key={related.id} className="group block bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+                    <div className="relative aspect-[4/3] w-full overflow-hidden">
+                      <Image 
+                        src={related.thumbnail || 'https://picsum.photos/seed/placeholder/400/300'} 
+                        alt={related.title}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <div className="p-5">
+                      <h4 className="text-base text-navy font-bold font-serif group-hover:text-brand transition-colors line-clamp-2 mb-2">
+                        {related.title}
+                      </h4>
+                      <span className="text-xs text-slate-400 font-medium">
+                        {related.createdAt ? new Intl.DateTimeFormat('vi-VN').format(new Date(related.createdAt)) : ''}
+                      </span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
 
           {/* Sidebar - 30% */}

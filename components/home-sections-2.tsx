@@ -1,4 +1,5 @@
 "use client";
+import { motion } from "motion/react";
 import Image from "next/image";
 
 import { Button, Accordion } from "./ui";
@@ -16,7 +17,12 @@ export function WhySpecialized() {
   return (
     <section className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-16 items-center">
-        <div>
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+        >
           <h2 className="text-4xl md:text-5xl font-serif font-bold mb-6 text-navy">Tại sao người niềng răng cần sản phẩm chuyên biệt?</h2>
           <div className="space-y-6 text-slate-600 text-lg leading-relaxed">
             <p>
@@ -27,15 +33,22 @@ export function WhySpecialized() {
             </p>
           </div>
           <Button size="lg" className="mt-8 rounded-full bg-brand text-white hover:bg-brand-dark transition-colors border-none">Tìm hiểu chi tiết</Button>
-        </div>
+        </motion.div>
         <div className="grid gap-6">
           {reasons.map((r, i) => (
-             <div key={i} className="flex gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow">
+             <motion.div 
+               key={i} 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-100px" }}
+               transition={{ duration: 0.5, delay: i * 0.1 }}
+               className="flex gap-4 p-6 bg-slate-50 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow"
+             >
                <div>
                  <h3 className="font-bold text-navy font-serif text-lg mb-2">{r.title}</h3>
                  <p className="text-slate-600 text-sm leading-relaxed">{r.desc}</p>
                </div>
-             </div>
+             </motion.div>
           ))}
         </div>
       </div>
@@ -53,19 +66,32 @@ export function CareRoutine() {
   return (
     <section className="py-24 bg-[#84EF6E] text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-slate-900 mb-4">Chu trình 3 bước chuẩn chuyên gia</h2>
           <p className="text-slate-800 max-w-2xl mx-auto text-lg">Đơn giản, dễ áp dụng và mang lại hiệu quả tối ưu cho người niềng răng.</p>
-        </div>
+        </motion.div>
         <div className="flex flex-col md:flex-row gap-6">
           {steps.map((step, i) => (
-             <div key={i} className="flex-1 bg-white/90 backdrop-blur-sm border border-white/50 rounded-2xl p-8 hover:shadow-md transition-shadow flex flex-col xl:flex-row gap-6 items-start">
+             <motion.div 
+               key={i} 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true, margin: "-100px" }}
+               transition={{ duration: 0.5, delay: i * 0.15 }}
+               className="flex-1 bg-white/90 backdrop-blur-sm border border-white/50 rounded-2xl p-8 hover:shadow-md transition-shadow flex flex-col xl:flex-row gap-6 items-start"
+             >
                 <span className="text-6xl font-bold font-serif text-slate-900 leading-none">{step.num}</span>
                 <div>
                    <h3 className="text-xl font-bold text-slate-900 mb-3 font-serif">{step.title}</h3>
                    <p className="text-slate-800 leading-relaxed text-sm">{step.desc}</p>
                 </div>
-             </div>
+             </motion.div>
           ))}
         </div>
       </div>
@@ -80,7 +106,13 @@ export function KnowledgeHub() {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4"
+        >
           <div>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-navy mb-4">Tin tức & Góc kiến thức</h2>
             <p className="text-slate-600 max-w-xl text-lg">Bài viết chuyên sâu giúp bạn chăm sóc răng miệng tốt hơn mỗi ngày.</p>
@@ -88,11 +120,17 @@ export function KnowledgeHub() {
           <Button variant="ghost" className="rounded-full text-brand-dark shrink-0">
             Xem tất cả bài viết <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
-        </div>
+        </motion.div>
         
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Main Featured */}
-          <div className="lg:col-span-7 group cursor-pointer">
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.6 }}
+            className="lg:col-span-7 group cursor-pointer"
+          >
              <div className="relative aspect-[16/10] rounded-2xl overflow-hidden mb-6">
                 <Image src={featured.image} alt={featured.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
              </div>
@@ -102,12 +140,19 @@ export function KnowledgeHub() {
              </div>
              <h3 className="text-2xl font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-serif mb-4">{featured.title}</h3>
              <p className="text-slate-600 line-clamp-3 leading-relaxed">Bộ tài liệu tổng hợp từ các chuyên gia nha khoa hàng đầu, hướng dẫn chi tiết cách vệ sinh, lựa chọn sản phẩm phù hợp và chế độ ăn uống chuẩn nhất dành riêng cho người niềng răng để đạt hiệu quả tối ưu nhất...</p>
-          </div>
+          </motion.div>
           
           {/* List Sidebar */}
           <div className="lg:col-span-5 flex flex-col gap-6">
              {list.map((article, i) => (
-                <div key={article.id} className="flex gap-5 group cursor-pointer items-start pb-6 border-b border-slate-100 last:border-0">
+                <motion.div 
+                  key={article.id} 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: i * 0.1 }}
+                  className="flex gap-5 group cursor-pointer items-start pb-6 border-b border-slate-100 last:border-0"
+                >
                    <div className="relative w-32 h-24 shrink-0 rounded-xl overflow-hidden">
                       <Image src={article.image} alt={article.title} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
                    </div>
@@ -118,7 +163,7 @@ export function KnowledgeHub() {
                       <h3 className="text-base font-bold text-navy leading-snug group-hover:text-brand-dark transition-colors font-serif line-clamp-2">{article.title}</h3>
                       <span className="text-slate-400 text-xs mt-2 block">{article.date}</span>
                    </div>
-                </div>
+                </motion.div>
              ))}
           </div>
         </div>

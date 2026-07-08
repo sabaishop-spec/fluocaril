@@ -115,7 +115,8 @@ export function HeroIntro() {
       <div className="max-w-4xl mx-auto px-4 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
           <span className="inline-block py-1 px-4 rounded-full bg-brand-light text-brand-dark text-sm font-semibold mb-6">
