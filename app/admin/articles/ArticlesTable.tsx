@@ -139,7 +139,7 @@ export default function ArticlesTable({ posts }: { posts: any[] }) {
                     <div className="relative w-16 h-12 rounded-md overflow-hidden bg-gray-100">
                       {post.thumbnail ? (
                         <Image
-                          src={post.thumbnail}
+                          src={post.thumbnail || '/images/placeholder.png'}
                           alt={post.title}
                           fill
                           className="object-cover"

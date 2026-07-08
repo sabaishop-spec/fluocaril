@@ -26,14 +26,36 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
   });
 
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState('');
   
   const [isProcessingFile, setIsProcessingFile] = useState(false);
 
-  const handleThumbnailUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleThumbnailUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
     const objectUrl = URL.createObjectURL(file);
-    setFormData(prev => ({ ...prev, thumbnail: objectUrl }));
+    setPreviewUrl(objectUrl);
+    setIsUploadingThumbnail(true);
+    
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+      
+      const uploadResult = await uploadImage(uploadFormData);
+      if (uploadResult.success && uploadResult.url) {
+        setFormData(prev => ({ ...prev, thumbnail: uploadResult.url }));
+      } else {
+        alert('Upload ảnh thất bại.');
+      }
+    } catch (error) {
+      console.error('Error uploading thumbnail:', error);
+      alert('Đã có lỗi xảy ra khi upload ảnh.');
+    } finally {
+      setIsUploadingThumbnail(false);
+      URL.revokeObjectURL(objectUrl);
+      setPreviewUrl('');
+    }
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -140,14 +162,14 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
         <div className="md:col-span-2">
           <label className="block text-sm font-medium text-gray-700 mb-2">Ảnh đại diện bài viết</label>
           <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 flex flex-col items-center justify-center bg-gray-50 hover:bg-gray-100 transition-colors relative overflow-hidden group">
-            {formData.thumbnail ? (
+            {(previewUrl || formData.thumbnail) ? (
               <div className="relative w-full max-w-md aspect-video rounded-lg overflow-hidden border border-gray-200">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={formData.thumbnail} alt="Thumbnail" className="w-full h-full object-cover" />
+                <img src={previewUrl || formData.thumbnail || '/images/placeholder.png'} alt="Thumbnail" className="w-full h-full object-cover" />
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                   <label className="cursor-pointer bg-white text-gray-900 px-4 py-2 rounded-lg font-medium shadow-sm hover:bg-gray-50">
                     Thay đổi ảnh
-                    <input type="file" name="thumbnail" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
+                    <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
                   </label>
                 </div>
               </div>
@@ -165,12 +187,12 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
                     <span className="text-xs text-gray-500 mt-1">PNG, JPG, GIF lên đến 5MB</span>
                   </>
                 )}
-                <input type="file" name="thumbnail" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
+                <input type="file" accept="image/*" className="hidden" onChange={handleThumbnailUpload} disabled={isUploadingThumbnail} />
               </label>
             )}
           </div>
           {/* Hidden input to store the thumbnail URL for FormData */}
-          <input type="hidden" name="existing_thumbnail" value={initialData?.thumbnail || ''} />
+          <input type="hidden" name="existing_thumbnail" value={formData.thumbnail || ''} />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Tiêu đề</label>
@@ -264,10 +286,10 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
         </button>
         <button
           type="submit"
-          disabled={isPending}
+          disabled={isPending || isUploadingThumbnail || isProcessingFile}
           className="px-6 py-2.5 rounded-lg bg-brand text-white font-medium hover:bg-brand-dark transition-colors disabled:opacity-70 flex items-center gap-2"
         >
-          {isPending ? 'Đang lưu...' : 'Lưu bài viết'}
+          {isPending ? 'Đang lưu...' : (isUploadingThumbnail || isProcessingFile) ? 'Đang tải...' : 'Lưu bài viết'}
         </button>
       </div>
     </form>
