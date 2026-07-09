@@ -1,6 +1,7 @@
 import { Hero, HeroIntro, FeaturedProducts } from "@/components/home-sections-1";
-import { WhySpecialized, CareRoutine, KnowledgeHub } from "@/components/home-sections-2";
-import { getHeroBanner, getLatestProducts, getCategories } from '@/src/db/queries';
+import { WhySpecialized, CareRoutine } from "@/components/home-sections-2";
+import KnowledgeHubWrapper from "@/components/KnowledgeHubWrapper";
+import { getHeroBanner, getLatestProducts, getCategories, getLatestPosts, getArticleCategories } from '@/src/db/queries';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -14,6 +15,8 @@ export default async function Home() {
   const heroData = await getHeroBanner();
   const productsList = await getLatestProducts();
   const categoriesList = await getCategories();
+  const postsList = await getLatestPosts();
+  const articleCategoriesList = await getArticleCategories();
 
   const productsWithCategory = productsList.map(p => {
     const cat = categoriesList.find(c => c.id === p.categoryId);
@@ -30,7 +33,7 @@ export default async function Home() {
       <FeaturedProducts items={productsWithCategory} />
       <WhySpecialized />
       <CareRoutine />
-      <KnowledgeHub />
+      <KnowledgeHubWrapper posts={postsList} categories={articleCategoriesList} />
     </>
   );
 }

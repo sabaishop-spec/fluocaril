@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ChevronLeft, ChevronRight, Eye, Calendar, User } from 'lucide-react';
 import { db } from '@/src/db';
 import { posts } from '@/src/db/schema';
-import { eq, desc } from 'drizzle-orm';
+import { eq, desc, sql } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import * as cheerio from 'cheerio';
 
@@ -66,6 +66,11 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     notFound();
   }
 
+  // Auto-increment views
+  await db.update(posts)
+    .set({ views: sql`${posts.views} + 1` })
+    .where(eq(posts.id, article.id));
+
   // Fetch recent articles for the sidebar
   const recentArticles = await db.query.posts.findMany({
     where: eq(posts.status, 'Published'),
@@ -79,8 +84,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
     day: '2-digit',
   }).format(new Date(article.createdAt)) : 'Mới cập nhật';
 
-  // Simulated view count
-  const viewCount = 100 + (slug.length * 10) % 500;
+  const viewCount = (article.views || 0) + 1;
 
   const { toc, html: processedHtml } = generateTOCAndAddIds(article.content || '');
 

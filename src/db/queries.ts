@@ -36,3 +36,26 @@ export async function getCategories(): Promise<Category[]> {
     return [];
   }
 }
+
+export type Post = typeof import('./schema').posts.$inferSelect;
+export type ArticleCategory = typeof import('./schema').articleCategories.$inferSelect;
+
+export async function getLatestPosts(): Promise<Post[]> {
+  const { posts } = await import('./schema');
+  try {
+    return await db.select().from(posts).where(eq(posts.status, 'Published')).orderBy(desc(posts.createdAt)).limit(20);
+  } catch (error) {
+    console.error("Database error in getLatestPosts:", error);
+    return [];
+  }
+}
+
+export async function getArticleCategories(): Promise<ArticleCategory[]> {
+  const { articleCategories } = await import('./schema');
+  try {
+    return await db.select().from(articleCategories);
+  } catch (error) {
+    console.error("Database error in getArticleCategories:", error);
+    return [];
+  }
+}

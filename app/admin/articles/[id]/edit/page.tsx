@@ -2,7 +2,7 @@ import ArticleForm from '@/app/admin/articles/ArticleForm';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
 import { db } from '@/src/db';
-import { posts } from '@/src/db/schema';
+import { posts, articleCategories } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 
@@ -26,6 +26,8 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
     notFound();
   }
 
+  const allCategories = await db.select().from(articleCategories);
+
   return (
     <div className="max-w-4xl mx-auto pb-12">
       <div className="mb-6">
@@ -43,7 +45,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
         <p className="text-gray-500 mt-2">Cập nhật nội dung bài viết.</p>
       </div>
 
-      <ArticleForm initialData={post} />
+      <ArticleForm initialData={post} categories={allCategories} />
     </div>
   );
 }

@@ -12,6 +12,8 @@ export async function createPost(formData: FormData) {
     const status = formData.get('status') as string;
     const content = formData.get('content') as string;
     const metaDescription = formData.get('meta_description') as string;
+    const categoryIdStr = formData.get('category_id') as string;
+    const categoryId = categoryIdStr ? parseInt(categoryIdStr, 10) : null;
     const thumbnailFile = formData.get('thumbnail') as File | null;
     let thumbnailUrl = (formData.get('existing_thumbnail') as string) || '';
 
@@ -38,6 +40,7 @@ export async function createPost(formData: FormData) {
       status: status || 'Draft',
       content,
       metaDescription,
+      categoryId,
       thumbnail: thumbnailUrl,
     });
 
@@ -60,6 +63,8 @@ export async function updatePost(id: number, formData: FormData) {
     const status = formData.get('status') as string;
     const content = formData.get('content') as string;
     const metaDescription = formData.get('meta_description') as string;
+    const categoryIdStr = formData.get('category_id') as string;
+    const categoryId = categoryIdStr ? parseInt(categoryIdStr, 10) : null;
     const thumbnailFile = formData.get('thumbnail') as File | null;
     let thumbnailUrl = (formData.get('existing_thumbnail') as string) || '';
 
@@ -87,6 +92,7 @@ export async function updatePost(id: number, formData: FormData) {
       status: status || 'Draft',
       content,
       metaDescription,
+      categoryId,
       thumbnail: thumbnailUrl,
     }).where(eq(posts.id, id));
 

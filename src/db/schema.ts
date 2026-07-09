@@ -36,6 +36,17 @@ export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));
 
+export const articleCategories = pgTable('article_categories', {
+  id: serial('id').primaryKey(),
+  name: text('name').notNull(),
+  slug: text('slug').notNull().unique(),
+  createdAt: timestamp('created_at').defaultNow(),
+});
+
+export const articleCategoriesRelations = relations(articleCategories, ({ many }) => ({
+  posts: many(posts),
+}));
+
 export const posts = pgTable('posts', {
   id: serial('id').primaryKey(),
   title: text('title').notNull(),
@@ -45,8 +56,17 @@ export const posts = pgTable('posts', {
   thumbnail: text('thumbnail'),
   metaDescription: text('meta_description'),
   status: text('status').default('Draft'),
+  categoryId: integer('category_id').references(() => articleCategories.id),
+  views: integer('views').notNull().default(0),
   createdAt: timestamp('created_at').defaultNow(),
 });
+
+export const postsRelations = relations(posts, ({ one }) => ({
+  categoryRel: one(articleCategories, {
+    fields: [posts.categoryId],
+    references: [articleCategories.id],
+  }),
+}));
 
 export const contacts = pgTable('contacts', {
   id: serial('id').primaryKey(),

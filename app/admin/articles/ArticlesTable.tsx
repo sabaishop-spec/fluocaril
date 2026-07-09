@@ -108,6 +108,7 @@ export default function ArticlesTable({ posts }: { posts: any[] }) {
               </th>
               <th className="py-4 px-6 font-medium">Ảnh bìa</th>
               <th className="py-4 px-6 font-medium">Tiêu đề</th>
+              <th className="py-4 px-6 font-medium">Danh mục</th>
               <th className="py-4 px-6 font-medium">Trạng thái</th>
               <th className="py-4 px-6 font-medium">Ngày tạo</th>
               <th className="py-4 px-6 font-medium text-right">Hành động</th>
@@ -116,7 +117,7 @@ export default function ArticlesTable({ posts }: { posts: any[] }) {
           <tbody className="divide-y divide-gray-100">
             {posts.length === 0 ? (
               <tr>
-                <td colSpan={6} className="py-12 text-center text-gray-500">
+                <td colSpan={7} className="py-12 text-center text-gray-500">
                   Chưa có bài viết nào. Hãy thêm bài viết mới.
                 </td>
               </tr>
@@ -155,6 +156,11 @@ export default function ArticlesTable({ posts }: { posts: any[] }) {
                   <td className="py-4 px-6">
                     <p className="font-medium text-gray-900 line-clamp-2">{post.title}</p>
                     <p className="text-sm text-gray-500">{post.slug}</p>
+                  </td>
+                  <td className="py-4 px-6">
+                    <span className="text-sm text-gray-700 bg-gray-100 px-2 py-1 rounded-md">
+                      {post.categoryRel?.name || 'Chưa phân loại'}
+                    </span>
                   </td>
                   <td className="py-4 px-6">
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

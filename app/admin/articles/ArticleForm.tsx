@@ -10,9 +10,10 @@ import mammoth from 'mammoth';
 
 interface ArticleFormProps {
   initialData?: any;
+  categories?: any[];
 }
 
-export default function ArticleForm({ initialData }: ArticleFormProps) {
+export default function ArticleForm({ initialData, categories }: ArticleFormProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isPending, startTransition] = useTransition();
@@ -25,6 +26,7 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
     thumbnail: initialData?.thumbnail || '',
     meta_description: initialData?.metaDescription || '',
     status: initialData?.status || 'Draft',
+    category_id: initialData?.categoryId || '',
   });
 
   const [isUploadingThumbnail, setIsUploadingThumbnail] = useState(false);
@@ -243,6 +245,20 @@ export default function ArticleForm({ initialData }: ArticleFormProps) {
             onChange={handleChange}
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Danh mục</label>
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand focus:border-brand transition-colors bg-white"
+          >
+            <option value="">-- Chọn danh mục --</option>
+            {categories?.map((cat) => (
+              <option key={cat.id} value={cat.id}>{cat.name}</option>
+            ))}
+          </select>
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>

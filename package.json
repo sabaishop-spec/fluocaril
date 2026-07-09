@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "drizzle-kit push && next build",
+    "build": "drizzle-kit push --config=drizzle.config.ts && next build",
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean"
@@ -28,7 +28,8 @@
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
-    "firebase": "^12.15.0",    "firebase-admin": "^14.1.0",
+    "firebase": "^12.15.0",
+    "firebase-admin": "^14.1.0",
     "glob": "^13.0.6",
     "lucide-react": "^0.553.0",
     "mammoth": "^1.12.0",

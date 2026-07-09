@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { articleCategories, topViewedArticles } from "@/lib/data";
+import { articleCategories } from "@/lib/data";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Metadata } from 'next';
 import { db } from "@/src/db";
@@ -36,6 +36,12 @@ export default async function KnowledgePage() {
 
   const featured = publishedPosts[0];
   const list = publishedPosts.slice(1);
+
+  const realTopViewedArticles = await db.query.posts.findMany({
+    where: eq(posts.status, 'Published'),
+    orderBy: [desc(posts.views)],
+    limit: 5,
+  });
 
   return (
     <div className="pt-24 pb-20 bg-slate-50 min-h-screen">
@@ -164,14 +170,14 @@ export default async function KnowledgePage() {
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
                 <h3 className="text-lg font-bold text-navy font-serif mb-4 pb-4 border-b border-slate-100">Xem nhiều nhất</h3>
                 <ul className="space-y-4">
-                  {topViewedArticles.map((article, idx) => (
-                    <li key={article.id} className="flex gap-4 group cursor-pointer">
+                  {realTopViewedArticles.map((article, idx) => (
+                    <li key={article.id} className="flex gap-4 group">
                       <span className="text-2xl font-bold font-serif text-brand/30 group-hover:text-brand transition-colors">
                         {(idx + 1).toString().padStart(2, '0')}
                       </span>
-                      <h4 className="text-sm font-semibold text-slate-700 leading-snug group-hover:text-navy transition-colors line-clamp-3 mt-1.5">
+                      <Link href={`/goc-kien-thuc/${article.slug}`} className="text-sm font-semibold text-slate-700 leading-snug group-hover:text-navy transition-colors line-clamp-3 mt-1.5 flex-1">
                         {article.title}
-                      </h4>
+                      </Link>
                     </li>
                   ))}
                 </ul>

@@ -8,6 +8,9 @@ import ArticlesTable from './ArticlesTable';
 export default async function ArticlesPage() {
   const allPosts = await db.query.posts.findMany({
     orderBy: [desc(posts.createdAt)],
+    with: {
+      categoryRel: true,
+    }
   });
 
   return (

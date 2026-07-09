@@ -1,12 +1,16 @@
 import ArticleForm from '@/app/admin/articles/ArticleForm';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';
+import { db } from '@/src/db';
+import { articleCategories } from '@/src/db/schema';
 
 export const metadata = {
   title: 'Thêm Bài Viết Mới | Admin',
 };
 
-export default function CreateArticlePage() {
+export default async function CreateArticlePage() {
+  const allCategories = await db.select().from(articleCategories);
+
   return (
     <div className="max-w-4xl mx-auto pb-12">
       <div className="mb-6">
@@ -24,7 +28,7 @@ export default function CreateArticlePage() {
         <p className="text-gray-500 mt-2">Tạo một bài viết mới cho Góc Kiến Thức.</p>
       </div>
 
-      <ArticleForm />
+      <ArticleForm categories={allCategories} />
     </div>
   );
 }
