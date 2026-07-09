@@ -22,7 +22,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   } catch(e) {}
 
   return (
-    <html lang="vi" className={`${inter.variable} ${lora.variable}`}>
+    <html lang="vi" className={`${inter.variable} ${lora.variable}`} data-scroll-behavior="smooth">
       <head>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>

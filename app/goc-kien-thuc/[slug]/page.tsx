@@ -7,6 +7,8 @@ import { posts } from '@/src/db/schema';
 import { eq, desc, sql } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import * as cheerio from 'cheerio';
+import InlineTOC from '@/components/InlineTOC';
+import SidePanelTOC from '@/components/SidePanelTOC';
 
 export const revalidate = 60; // Revalidate cache every 60 seconds
 
@@ -90,6 +92,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="pt-28 pb-20 bg-slate-50 min-h-screen">
+      <SidePanelTOC toc={toc} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb */}
@@ -141,24 +144,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                 </header>
 
                 {/* Table of Contents */}
-                {toc.length > 0 && (
-                  <div className="bg-slate-50 border border-slate-100 rounded-2xl p-6 mb-10">
-                    <h2 className="text-lg font-bold text-navy mb-4">Nội dung chính:</h2>
-                    <ul className="space-y-2">
-                      {toc.map((item, index) => (
-                        <li key={index} className={`${item.level === 3 ? 'ml-6' : ''}`}>
-                          <a 
-                            href={`#${item.id}`} 
-                            className="text-brand-dark hover:text-brand font-medium flex items-start gap-2 group transition-colors"
-                          >
-                            <span className="text-brand/50 mt-1">•</span>
-                            <span className="group-hover:underline underline-offset-2">{item.text}</span>
-                          </a>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <InlineTOC toc={toc} />
 
                 {/* Content */}
                 <div 
