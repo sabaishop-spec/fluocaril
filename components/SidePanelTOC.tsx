@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { List, X } from "lucide-react";
+import { ListOrdered, X } from "lucide-react";
 
 interface TOCItem {
   id: string;
@@ -60,9 +60,9 @@ export default function SidePanelTOC({ toc }: { toc: TOCItem[] }) {
 
   return (
     <>
-      {/* Desktop Scrollspy Toolbar */}
+      {/* Trigger Button */}
       <div
-        className={`hidden lg:flex flex-col items-center gap-3 fixed top-1/2 -translate-y-1/2 left-[calc(50%-32rem)] xl:left-[calc(50%-38rem)] 2xl:left-[calc(50%-44rem)] z-40 transition-all duration-300 ${
+        className={`fixed top-1/2 -translate-y-1/2 z-40 transition-all duration-300 left-0 lg:left-[calc(50%-32rem)] xl:left-[calc(50%-38rem)] 2xl:left-[calc(50%-44rem)] ${
           showTrigger && !isOpen
             ? "opacity-60 hover:opacity-100 pointer-events-auto"
             : "opacity-0 pointer-events-none -translate-x-2"
@@ -70,55 +70,12 @@ export default function SidePanelTOC({ toc }: { toc: TOCItem[] }) {
       >
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-white border border-gray-200 p-2.5 rounded-full shadow-md hover:bg-gray-50 transition-colors"
+          className="bg-white border border-gray-200 p-2.5 rounded-r-lg lg:rounded-full shadow-md hover:bg-gray-50 hover:scale-105 transition-all"
           aria-label="Mở mục lục"
         >
-          <List className="w-5 h-5 text-slate-600" />
+          <ListOrdered className="w-5 h-5 text-slate-600" />
         </button>
-
-        {toc
-          .filter((item) => item.level === 2)
-          .map((item, index, h2Array) => {
-            const itemIndexInToc = toc.findIndex((t) => t.id === item.id);
-            const nextH2IndexInToc =
-              index < h2Array.length - 1
-                ? toc.findIndex((t) => t.id === h2Array[index + 1].id)
-                : toc.length;
-            const activeIndexInToc = toc.findIndex((t) => t.id === activeId);
-
-            const isActive =
-              activeIndexInToc >= itemIndexInToc &&
-              activeIndexInToc < nextH2IndexInToc;
-
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleClick(item.id)}
-                className={`w-10 h-10 flex items-center justify-center rounded-full text-sm font-semibold border shadow-sm transition-all duration-300 ${
-                  isActive
-                    ? "bg-blue-600 text-white border-blue-600 scale-110"
-                    : "bg-white text-gray-500 border-gray-200 hover:bg-gray-50 hover:scale-105"
-                }`}
-                title={item.text}
-              >
-                {index + 1}
-              </button>
-            );
-          })}
       </div>
-
-      {/* Mobile Trigger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className={`lg:hidden fixed left-0 top-1/2 -translate-y-1/2 z-40 bg-white border border-gray-200 p-2 rounded-r-lg shadow-md transition-all duration-300 ${
-          showTrigger && !isOpen
-            ? "opacity-60 hover:opacity-100 hover:translate-x-0.5 pointer-events-auto"
-            : "opacity-0 pointer-events-none -translate-x-2"
-        }`}
-        aria-label="Mở mục lục"
-      >
-        <List className="w-5 h-5 text-slate-600" />
-      </button>
 
       {/* Slide-out Panel */}
       <div

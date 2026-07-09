@@ -15,8 +15,6 @@ export default function InlineTOC({ toc }: { toc: TOCItem[] }) {
 
   if (!toc || toc.length === 0) return null;
 
-  let h2Count = 0;
-
   const handleScroll = (e: React.MouseEvent<HTMLAnchorElement>, id: string) => {
     e.preventDefault();
     const element = document.getElementById(id);
@@ -52,10 +50,6 @@ export default function InlineTOC({ toc }: { toc: TOCItem[] }) {
           >
             <ul className="space-y-3 pt-2">
               {toc.map((item, index) => {
-                if (item.level === 2) {
-                  h2Count++;
-                }
-
                 return (
                   <li
                     key={index}
@@ -70,8 +64,6 @@ export default function InlineTOC({ toc }: { toc: TOCItem[] }) {
                           : "text-slate-600 text-sm"
                       } hover:text-emerald-600`}
                     >
-                      {item.level === 2 && <span className="mr-2">{h2Count}.</span>}
-                      {item.level === 3 && <span className="mr-2 text-slate-400">•</span>}
                       {item.text}
                     </a>
                   </li>
