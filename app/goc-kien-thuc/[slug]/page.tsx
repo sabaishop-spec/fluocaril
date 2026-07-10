@@ -161,9 +161,9 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     prose-strong:text-navy prose-strong:font-bold
                     prose-blockquote:border-l-4 prose-blockquote:border-brand prose-blockquote:bg-brand/5 prose-blockquote:p-4 prose-blockquote:rounded-r-lg prose-blockquote:italic prose-blockquote:text-slate-700
                     prose-img:rounded-2xl prose-img:mx-auto prose-img:shadow-md
-                    [&_table]:block [&_table]:w-full [&_table]:overflow-x-auto
-                    [&_th]:bg-emerald-600 [&_th]:text-white [&_th]:font-bold [&_th]:p-4 [&_th]:border [&_th]:border-emerald-700
-                    [&_td]:bg-white [&_td]:text-gray-800 [&_td]:p-4 [&_td]:border [&_td]:border-gray-200 [&_td]:min-w-[150px]"
+                    [&_table]:!block [&_table]:!w-full [&_table]:!overflow-x-auto
+                    [&_thead]:!bg-emerald-600 [&_th]:!bg-emerald-600 [&_th]:!text-white [&_th]:!font-bold [&_th]:!p-4 [&_th]:!border [&_th]:!border-emerald-700
+                    [&_tbody]:!bg-white [&_tr]:!bg-white [&_td]:!bg-white [&_td]:!text-gray-800 [&_td]:!p-4 [&_td]:!border [&_td]:!border-gray-200 [&_td]:min-w-[150px]"
                   dangerouslySetInnerHTML={{ __html: processedHtml }} 
                 />
               </div>
