@@ -183,13 +183,11 @@ export function FeaturedProducts({ items }: { items?: any[] }) {
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-slate-100 flex flex-col h-full"
             >
               <Link href={`/san-pham/${product.slug}`} className="flex flex-col h-full">
-                <div className="relative aspect-square p-6 bg-slate-50/50">
+                <div className="relative overflow-hidden rounded-t-2xl aspect-square p-6 bg-slate-50/50">
                   {product.badge && (
-                    <div className="absolute top-4 left-4 z-10">
-                      <span className="inline-block px-3 py-1 bg-brand text-white text-xs font-bold rounded-full uppercase tracking-wider shadow-sm">
-                        {product.badge === 'new' ? 'Mới' : product.badge === 'best-seller' ? 'Bán chạy' : product.badge}
-                      </span>
-                    </div>
+                    <span className="absolute top-3 right-3 z-40 px-3 py-1 bg-emerald-500 text-white text-xs font-bold rounded-full shadow-md">
+                      {product.badge === 'new' ? 'Mới' : product.badge === 'best-seller' ? 'Bán chạy' : product.badge}
+                    </span>
                   )}
                   <ProductImage
                     src={product.imageUrl || "https://picsum.photos/seed/placeholder/400/533"}

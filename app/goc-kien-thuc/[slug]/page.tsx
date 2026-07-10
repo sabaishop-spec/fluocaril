@@ -92,7 +92,6 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
 
   return (
     <div className="pt-28 pb-20 bg-slate-50 min-h-screen">
-      <SidePanelTOC toc={toc} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Breadcrumb */}
@@ -119,8 +118,10 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Main Content - 70% */}
           <div className="w-full lg:w-[70%]">
-            <article className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-8 md:p-12">
+            <div className="relative mx-auto max-w-3xl lg:max-w-4xl w-full px-4 py-8">
+              <SidePanelTOC toc={toc} />
+              <article className="bg-white rounded-3xl shadow-sm border border-slate-100">
+                <div className="p-8 md:p-12">
                 {/* Header */}
                 <header className="mb-10">
                   <h1 className="text-3xl md:text-5xl font-bold font-serif text-navy mb-6 leading-[1.15]">
@@ -163,7 +164,8 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                   dangerouslySetInnerHTML={{ __html: processedHtml }} 
                 />
               </div>
-            </article>
+              </article>
+            </div>
 
             {/* Related Articles */}
             <div className="mt-12">

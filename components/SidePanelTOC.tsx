@@ -61,51 +61,56 @@ export default function SidePanelTOC({ toc }: { toc: TOCItem[] }) {
   return (
     <>
       {/* Trigger Button */}
-      <div
-        className={`fixed top-1/2 -translate-y-1/2 z-40 transition-all duration-300 left-0 lg:left-[calc(50%-32rem)] xl:left-[calc(50%-38rem)] 2xl:left-[calc(50%-44rem)] ${
-          showTrigger && !isOpen
-            ? "opacity-60 hover:opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none -translate-x-2"
-        }`}
-      >
+      {!isOpen && showTrigger && (
         <button
           onClick={() => setIsOpen(true)}
-          className="bg-white border border-gray-200 p-2.5 rounded-r-lg lg:rounded-full shadow-md hover:bg-gray-50 hover:scale-105 transition-all"
+          className="fixed left-0 top-32 z-40 bg-white shadow-md rounded-r-lg p-2 hover:bg-gray-50 transition-colors"
           aria-label="Mở mục lục"
         >
-          <ListOrdered className="w-5 h-5 text-slate-600" />
+          <ListOrdered className="w-6 h-6 text-slate-600" />
         </button>
-      </div>
+      )}
+
+      {/* Backdrop */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/30 z-40"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
 
       {/* Slide-out Panel */}
       <div
-        className={`fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-2xl border-r border-gray-200 transform transition-transform duration-300 flex flex-col ${
+        className={`fixed top-0 left-0 h-full w-72 bg-white shadow-2xl z-50 transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         {/* Header Panel */}
-        <div className="bg-[#333] text-white p-4 flex justify-between items-center shrink-0">
-          <span className="font-bold text-lg">≡ Mục lục</span>
+        <div className="flex items-center justify-between p-4 border-b">
+          <div className="flex items-center gap-2">
+            <ListOrdered className="w-5 h-5 text-navy" />
+            <span className="font-bold text-lg text-navy">Mục lục</span>
+          </div>
           <button
             onClick={() => setIsOpen(false)}
-            className="hover:text-gray-300 transition-colors"
+            className="text-gray-500 hover:text-gray-700 transition-colors p-1"
             aria-label="Đóng mục lục"
           >
-            <X className="w-6 h-6" />
+            <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Items List */}
-        <div className="overflow-y-auto flex-1 py-2">
+        <div className="overflow-y-auto h-[calc(100vh-4rem)]">
           {toc.map((item) => {
             const isActive = activeId === item.id;
             return (
               <button
                 key={item.id}
                 onClick={() => handleClick(item.id)}
-                className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-gray-100 ${
+                className={`w-full text-left px-4 py-3 text-sm transition-colors border-b border-gray-50 ${
                   isActive
-                    ? "bg-emerald-600 text-white font-bold"
+                    ? "bg-brand text-white font-bold"
                     : "bg-white text-gray-700 hover:bg-gray-50"
                 }`}
                 style={{ paddingLeft: `${(item.level - 1) * 1 + 1}rem` }}
