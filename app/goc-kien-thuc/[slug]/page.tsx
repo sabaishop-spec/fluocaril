@@ -162,7 +162,7 @@ export default async function ArticlePage({ params }: { params: Promise<{ slug: 
                     prose-blockquote:border-l-4 prose-blockquote:border-brand prose-blockquote:bg-brand/5 prose-blockquote:p-4 prose-blockquote:rounded-r-lg prose-blockquote:italic prose-blockquote:text-slate-700
                     prose-img:rounded-2xl prose-img:mx-auto prose-img:shadow-md
                     [&_table]:!block [&_table]:!w-full [&_table]:!overflow-x-auto
-                    [&_td]:!border [&_td]:!p-4 [&_td]:!align-middle [&_td]:min-w-[150px]
+                    [&_td]:!border [&_td]:!p-4 [&_td]:!align-middle
                     [&_tr:first-child_td]:!bg-emerald-600 [&_tr:first-child_td]:!text-white [&_tr:first-child_td]:!font-bold [&_tr:first-child_td]:!border-emerald-700
                     [&_tr:not(:first-child)_td]:!bg-white [&_tr:not(:first-child)_td]:!text-gray-800 [&_tr:not(:first-child)_td]:!border-gray-200"
                   dangerouslySetInnerHTML={{ __html: processedHtml }} 
