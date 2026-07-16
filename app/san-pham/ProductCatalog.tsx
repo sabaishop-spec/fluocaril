@@ -100,15 +100,15 @@ function CatalogContent({ products, categories }: { products: any[], categories:
   };
 
   const categoryParam = searchParams.get("category");
-  const activeCategory = categoryParam ? parseInt(categoryParam, 10) : null;
+  const activeCategory = categoryParam || null;
 
   const badgeParam = searchParams.get("badge");
   const activeBadge = badgeParam || null;
 
-  const setCategory = (id: number | null) => {
+  const setCategory = (id: string | null) => {
     const newSearchParams = new URLSearchParams(searchParams.toString());
     if (id !== null) {
-      newSearchParams.set("category", id.toString());
+      newSearchParams.set("category", id);
     } else {
       newSearchParams.delete("category");
     }
@@ -125,9 +125,12 @@ function CatalogContent({ products, categories }: { products: any[], categories:
     router.push(`/san-pham?${newSearchParams.toString()}`);
   };
 
-  let filteredProducts = activeCategory
-    ? products.filter(p => p.categoryId === activeCategory)
-    : products;
+  let filteredProducts = products;
+  if (activeCategory) {
+    const categoryObj = categories.find(c => c.slug === activeCategory || c.id.toString() === activeCategory);
+    const targetName = categoryObj ? categoryObj.name : activeCategory;
+    filteredProducts = filteredProducts.filter(p => p.categoryName === targetName || p.category === targetName || (categoryObj && p.categoryId === categoryObj.id));
+  }
 
   if (activeBadge) {
     filteredProducts = filteredProducts.filter(p => p.badge === activeBadge);
@@ -205,12 +208,12 @@ function CatalogContent({ products, categories }: { products: any[], categories:
               <div className="relative w-64 shrink-0">
                 <select
                   value={activeCategory === null ? 'all' : activeCategory}
-                  onChange={(e) => setCategory(e.target.value === 'all' ? null : parseInt(e.target.value, 10))}
+                  onChange={(e) => setCategory(e.target.value === 'all' ? null : e.target.value)}
                   className="w-full px-4 py-2.5 pr-10 bg-white border border-slate-200 rounded-lg text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 focus:border-transparent appearance-none cursor-pointer transition-all"
                 >
                   <option value="all">Tất cả</option>
                   {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
+                    <option key={cat.id} value={cat.slug || cat.id.toString()}>
                       {cat.name}
                     </option>
                   ))}
@@ -373,12 +376,12 @@ function CatalogContent({ products, categories }: { products: any[], categories:
                 <div className="relative">
                   <select
                     value={activeCategory === null ? 'all' : activeCategory}
-                    onChange={(e) => setCategory(e.target.value === 'all' ? null : parseInt(e.target.value, 10))}
+                    onChange={(e) => setCategory(e.target.value === 'all' ? null : e.target.value)}
                     className="w-full px-4 py-3 pr-10 bg-white border border-slate-200 rounded-xl text-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-slate-800 focus:border-transparent appearance-none cursor-pointer"
                   >
                     <option value="all">Tất cả danh mục</option>
                     {categories.map((cat) => (
-                      <option key={cat.id} value={cat.id}>
+                      <option key={cat.id} value={cat.slug || cat.id.toString()}>
                         {cat.name}
                       </option>
                     ))}

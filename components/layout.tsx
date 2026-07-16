@@ -36,7 +36,7 @@ export function Header({ categories = [] }: { categories?: any[] }) {
             <div className="absolute top-full left-0 pt-4 hidden group-hover:flex flex-col z-50 min-w-[240px] transition-all duration-300">
               <div className="bg-white shadow-xl rounded-xl p-3 border border-slate-100 flex flex-col">
                 {categories.length > 0 ? categories.map((cat) => (
-                  <Link key={cat.id} href={`/san-pham?category=${cat.id}`} className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">
+                  <Link key={cat.id} href={`/san-pham?category=${cat.slug || cat.id}`} className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">
                     {cat.name}
                   </Link>
                 )) : (
@@ -89,49 +89,72 @@ export function Header({ categories = [] }: { categories?: any[] }) {
   );
 }
 
-export function Footer() {
+export function Footer({ categories = [] }: { categories?: any[] }) {
+  const [data, setData] = useState(() => {
+    // initial default values
+    const defaults = {
+      description: 'Thương hiệu chăm sóc răng miệng chuyên biệt đồng hành cùng người dùng trong từng giai đoạn chỉnh nha.',
+      address: 'Tòa nhà ABC, Đường XYZ, Hà Nội',
+      phone: '1900 1234',
+      email: 'contact@fluocaril.vn',
+      facebook: '#',
+      instagram: '#',
+      tiktok: '#',
+      copyright: `© ${new Date().getFullYear()} Fluocaril Vietnam. All rights reserved.`
+    };
+    
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('site_footer');
+      if (saved) {
+        try {
+          return { ...defaults, ...JSON.parse(saved) };
+        } catch (e) {
+          console.error("Failed to parse saved footer data", e);
+        }
+      }
+    }
+    return defaults;
+  });
+
   return (
     <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
           <div className="lg:col-span-1">
             <Link href="/" className="mb-6 block">
               <Logo className="h-8" />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed mb-6">
-              Thương hiệu chăm sóc răng miệng chuyên biệt đồng hành cùng người dùng trong từng giai đoạn chỉnh nha.
+              {data.description}
             </p>
             <ul className="space-y-2 text-sm text-slate-400">
               <li className="flex items-start gap-2">
                 <i className="fas fa-map-marker-alt mt-0.5 shrink-0"></i>
-                <span>Tòa nhà ABC, Đường XYZ, Hà Nội</span>
+                <span>{data.address}</span>
               </li>
               <li className="flex items-center gap-2">
                 <i className="fas fa-phone-alt shrink-0"></i>
-                <span>1900 1234</span>
+                <span>{data.phone}</span>
               </li>
               <li className="flex items-center gap-2">
                 <i className="fas fa-envelope shrink-0"></i>
-                <span>contact@fluocaril.vn</span>
+                <span>{data.email}</span>
               </li>
             </ul>
           </div>
           <div>
             <h4 className="font-bold text-navy mb-4 font-serif">Sản phẩm</h4>
-            <ul className="space-y-3 text-sm text-slate-600">
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Kem đánh răng</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Nước súc miệng</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Bàn chải kẽ</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Làm sạch khay & hàm duy trì</Link></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-bold text-navy mb-4 font-serif">Chăm sóc chỉnh nha</h4>
-            <ul className="space-y-3 text-sm text-slate-600">
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Sắp niềng</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Đang niềng</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Sau tháo niềng</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Khay trong suốt</Link></li>
+            <ul className="space-y-3">
+              {categories.map((category) => (
+                <li key={category.id}>
+                  <Link 
+                    href={`/san-pham?category=${category.slug || category.id}`}
+                    className="text-slate-600 hover:text-brand-dark transition-colors block text-sm"
+                  >
+                    {category.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
           <div>
@@ -142,20 +165,20 @@ export function Footer() {
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Điều khoản sử dụng</Link></li>
             </ul>
             <div className="flex items-center gap-3">
-               <Link href="#" className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+               <Link href={data.facebook} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
                  <i className="fa-brands fa-facebook text-xl"></i>
                </Link>
-               <Link href="#" className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+               <Link href={data.instagram} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
                  <i className="fa-brands fa-instagram text-xl"></i>
                </Link>
-               <Link href="#" className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+               <Link href={data.tiktok} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
                  <i className="fa-brands fa-tiktok text-xl"></i>
                </Link>
             </div>
           </div>
         </div>
         <div className="pt-8 border-t border-slate-200 text-sm text-slate-400 text-center">
-          <p>© {new Date().getFullYear()} Fluocaril Vietnam. All rights reserved.</p>
+          <p>{data.copyright}</p>
         </div>
       </div>
     </footer>

@@ -31,7 +31,6 @@ export default async function ProductsPage() {
                 <th className="px-6 py-4">Hình ảnh</th>
                 <th className="px-6 py-4">Tên sản phẩm</th>
                 <th className="px-6 py-4">Hệ sinh thái</th>
-                <th className="px-6 py-4">Danh mục cũ</th>
                 <th className="px-6 py-4">Trạng thái</th>
                 <th className="px-6 py-4 text-right">Hành động</th>
               </tr>
@@ -62,7 +61,6 @@ export default async function ProductsPage() {
                       <div className="text-sm text-gray-500 mt-1">{product.slug}</div>
                     </td>
                     <td className="px-6 py-4 text-gray-600">{categoriesList.find(c => c.id === product.categoryId)?.name || '—'}</td>
-                    <td className="px-6 py-4 text-gray-600">{product.category || '—'}</td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${product.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                         {product.status || 'Active'}

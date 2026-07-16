@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "npx drizzle-kit push --config=drizzle.config.ts && next build",
+    "dev": "next dev -p 3000",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint .",
     "clean": "next clean"
@@ -26,6 +26,7 @@
     "cheerio": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "date-fns": "^4.4.0",
     "drizzle-kit": "^0.31.10",
     "drizzle-orm": "^0.45.2",
     "firebase": "^12.15.0",

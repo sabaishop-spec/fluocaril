@@ -1,9 +1,9 @@
 import Image from "next/image";
-import { db } from '@/src/db';
-import { products, categories as categoriesTable } from '@/src/db/schema';
-import { desc } from 'drizzle-orm';
 import { ProductCatalog } from "./ProductCatalog";
 import type { Metadata } from 'next';
+import { db } from '@/src/db';
+import { products, categories } from '@/src/db/schema';
+import { desc } from 'drizzle-orm';
 
 export const metadata: Metadata = {
   title: {
@@ -13,19 +13,19 @@ export const metadata: Metadata = {
   description: 'Danh mục các sản phẩm kem đánh răng, nước súc miệng, và bàn chải chuyên biệt cho quá trình chỉnh nha từ Fluocaril.',
 };
 
-
 export const dynamic = 'force-dynamic';
 
 export default async function ProductsPage() {
   let productsList: any[] = [];
   let categoriesList: any[] = [];
+  
   try {
     productsList = await db.select().from(products).orderBy(desc(products.createdAt));
-    categoriesList = await db.select().from(categoriesTable).orderBy(desc(categoriesTable.createdAt));
+    categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
   } catch (error) {
     console.error("Database error in ProductsPage:", error);
   }
-  
+
   const productsWithCategory = productsList.map(p => {
     const cat = categoriesList.find(c => c.id === p.categoryId);
     return {

@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon } from 'lucide-react';
+import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon, LayoutTemplate, PanelBottom } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
@@ -38,6 +38,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <Link href="/admin/banner" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
             <ImageIcon className="w-5 h-5 mr-3" />
             <span className="font-medium">Cấu hình Banner</span>
+          </Link>
+          <Link href="/admin/landing-page" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            <LayoutTemplate className="w-5 h-5 mr-3" />
+            <span className="font-medium">Quản lý Landing Page</span>
+          </Link>
+          <Link href="/admin/footer" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+            <PanelBottom className="w-5 h-5 mr-3" />
+            <span className="font-medium">Cấu hình Footer</span>
           </Link>
         </nav>
       </aside>

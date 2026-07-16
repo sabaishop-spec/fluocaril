@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "motion/react";
 import Image from "next/image";
+import Link from "next/link";
 
 import { Button, Accordion } from "./ui";
 import { faqs, articles } from "@/lib/data";
@@ -32,7 +33,9 @@ export function WhySpecialized() {
               Sử dụng các sản phẩm chuyên khoa không chỉ giúp làm sạch sâu mọi ngóc ngách mà còn bảo vệ cấu trúc răng yếu ớt trong thời kỳ chịu lực kéo, đảm bảo bạn có một hàm răng khỏe mạnh khi tháo niềng.
             </p>
           </div>
-          <Button size="lg" className="mt-8 rounded-full bg-brand text-white hover:bg-brand-dark transition-colors border-none">Tìm hiểu chi tiết</Button>
+          <Link href="/tai-sao-chon-fluocaril">
+            <Button size="lg" className="mt-8 rounded-full bg-brand text-white hover:bg-brand-dark transition-colors border-none">Tìm hiểu chi tiết</Button>
+          </Link>
         </motion.div>
         <div className="grid gap-6">
           {reasons.map((r, i) => (
@@ -63,6 +66,8 @@ export function CareRoutine() {
     { num: '03', title: 'Bổ trợ bảo vệ', desc: 'Súc miệng để tiêu diệt vi khuẩn và duy trì hơi thở thơm mát suốt cả ngày.' }
   ];
 
+  return null;
+  /*
   return (
     <section className="py-24 bg-[#84EF6E] text-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -97,4 +102,5 @@ export function CareRoutine() {
       </div>
     </section>
   );
+  */
 }
