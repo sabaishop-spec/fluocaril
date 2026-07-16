@@ -1,9 +1,14 @@
 import { Package, FileText, LayoutDashboard } from 'lucide-react';
 import AdminToast from '@/components/AdminToast';
-import { articles } from '@/lib/data';
+import { products } from '@/lib/data';
+import { db } from '@/src/db';
+import { posts } from '@/src/db/schema';
+import { count } from 'drizzle-orm';
 
-export default function AdminDashboard() {
-  const totalArticles = articles.length;
+export default async function AdminDashboard() {
+  const [articlesResult] = await db.select({ count: count() }).from(posts);
+  const totalArticles = articlesResult.count;
+  const totalProducts = products.length;
 
   return (
     <div className="p-8 relative">
@@ -30,7 +35,7 @@ export default function AdminDashboard() {
           </div>
           <div>
             <p className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-1">Tổng sản phẩm</p>
-            <h3 className="text-3xl font-bold text-gray-800">120</h3>
+            <h3 className="text-3xl font-bold text-gray-800">{totalProducts}</h3>
           </div>
         </div>
 
