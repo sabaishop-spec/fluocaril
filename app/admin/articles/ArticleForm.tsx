@@ -8,6 +8,122 @@ import { uploadImage } from '@/app/admin/actions/upload';
 import { Upload, Loader2 } from 'lucide-react';
 import mammoth from 'mammoth';
 
+const normalizeImportedTables = (doc: Document) => {
+  const tables = doc.querySelectorAll('table');
+  tables.forEach(table => {
+    // Xóa style/width inline của table
+    table.removeAttribute('style');
+    table.removeAttribute('width');
+    table.removeAttribute('height');
+    table.removeAttribute('border');
+    table.removeAttribute('cellspacing');
+    table.removeAttribute('cellpadding');
+
+    const rows = Array.from(table.querySelectorAll('tr'));
+    if (rows.length === 0) return;
+
+    // Tìm xem cột cuối có rỗng không
+    let maxCols = 0;
+    rows.forEach(row => {
+      const cells = Array.from(row.querySelectorAll('td, th'));
+      if (cells.length > maxCols) maxCols = cells.length;
+    });
+
+    if (maxCols > 0) {
+      let lastColEmpty = true;
+      rows.forEach(row => {
+        const cells = Array.from(row.querySelectorAll('td, th'));
+        if (cells.length === maxCols) {
+          const lastCell = cells[maxCols - 1];
+          if (lastCell.textContent?.trim() !== '') {
+            lastColEmpty = false;
+          }
+        }
+      });
+
+      if (lastColEmpty) {
+        rows.forEach(row => {
+          const cells = Array.from(row.querySelectorAll('td, th'));
+          if (cells.length === maxCols) {
+            cells[maxCols - 1].remove();
+          }
+        });
+        maxCols--;
+      }
+    }
+
+    // Xử lý tất cả các ô
+    table.querySelectorAll('td, th').forEach(cell => {
+      cell.removeAttribute('style');
+      cell.removeAttribute('width');
+      cell.removeAttribute('height');
+      cell.removeAttribute('valign');
+    });
+
+    const headerRow = rows[0];
+    const headerCells = Array.from(headerRow.querySelectorAll('td, th'));
+    
+    // Chuyển hàng đầu tiên thành th
+    headerCells.forEach(cell => {
+      if (cell.tagName.toLowerCase() !== 'th') {
+        const th = doc.createElement('th');
+        th.innerHTML = cell.innerHTML;
+        cell.parentNode?.replaceChild(th, cell);
+      }
+    });
+
+    const headers = Array.from(headerRow.querySelectorAll('th')).map(th => th.textContent?.trim() || '');
+
+    // Hàng nội dung phải là td
+    for (let i = 1; i < rows.length; i++) {
+      const row = rows[i];
+      const cells = Array.from(row.querySelectorAll('td, th'));
+      cells.forEach((cell, index) => {
+        if (cell.tagName.toLowerCase() !== 'td') {
+          const td = doc.createElement('td');
+          td.innerHTML = cell.innerHTML;
+          cell.parentNode?.replaceChild(td, cell);
+          cell = td; // cập nhật biến cell
+        }
+        
+        // Loại bỏ thẻ <strong> hay <b> ở các ô nội dung nếu có để font-weight bình thường
+        // Hoặc đơn giản là dùng CSS để thiết lập font-weight: normal; trong component
+        
+        if (index < headers.length) {
+          (cell as HTMLElement).setAttribute('data-label', headers[index]);
+        }
+      });
+    }
+
+    // Wrap thead/tbody
+    let thead = table.querySelector('thead');
+    if (!thead) {
+      thead = doc.createElement('thead');
+      table.insertBefore(thead, table.firstChild);
+      thead.appendChild(headerRow);
+    }
+    
+    let tbody = table.querySelector('tbody');
+    if (!tbody) {
+      tbody = doc.createElement('tbody');
+      table.appendChild(tbody);
+      for (let i = 1; i < rows.length; i++) {
+        tbody.appendChild(rows[i]);
+      }
+    }
+
+    // Nhận diện bảng so sánh
+    const requiredHeaders = ["STT", "Tên phương pháp", "Chi tiết", "Ưu điểm", "Nhược điểm", "Giá thành"];
+    const hasComparisonHeaders = requiredHeaders.every(req => 
+      headers.some(h => h.toLowerCase().includes(req.toLowerCase()))
+    );
+    
+    if (hasComparisonHeaders) {
+      table.classList.add('comparison-table');
+    }
+  });
+};
+
 interface ArticleFormProps {
   initialData?: any;
   categories?: any[];
@@ -108,6 +224,8 @@ export default function ArticleForm({ initialData, categories }: ArticleFormProp
           });
           
           await Promise.all(uploadPromises);
+          
+          normalizeImportedTables(doc);
           
           const cleanedHtmlString = doc.body.innerHTML;
           setFormData(prev => ({ ...prev, content: cleanedHtmlString }));

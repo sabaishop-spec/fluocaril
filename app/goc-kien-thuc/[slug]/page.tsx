@@ -54,6 +54,85 @@ function generateTOCAndAddIds(html: string) {
     $(el).addClass('rounded-xl shadow-sm max-w-full h-auto');
   });
 
+  // Transform comparison tables
+  $('table').each((i, el) => {
+    const headers = $(el).find('th, thead td, tr:first-child td, tr:first-child th').map((_, th) => $(th).text().trim()).get();
+    
+    const requiredHeaders = ["STT", "Tên phương pháp", "Chi tiết", "Ưu điểm", "Nhược điểm", "Giá thành"];
+    const hasComparisonHeaders = requiredHeaders.every(req => 
+      headers.some(h => h.toLowerCase().includes(req.toLowerCase()))
+    );
+    
+    if ($(el).hasClass('comparison-table') || hasComparisonHeaders) {
+      const colMap: Record<string, number> = {};
+      headers.forEach((h, idx) => {
+        const lowerH = h.toLowerCase();
+        requiredHeaders.forEach(req => {
+          if (lowerH.includes(req.toLowerCase())) {
+            colMap[req] = idx;
+          }
+        });
+      });
+
+      const $container = $('<div class="comparison-cards-container flex flex-col gap-6 my-8"></div>');
+
+      const rows = $(el).find('tr');
+      // Skip the first row (headers)
+      for (let r = 1; r < rows.length; r++) {
+        const row = rows[r];
+        const cells = $(row).find('td, th');
+        if (cells.length === 0) continue;
+        
+        const getText = (colName: string) => {
+          const idx = colMap[colName];
+          return idx !== undefined ? $(cells[idx]).html() || '' : '';
+        };
+
+        const stt = getText("STT").replace(/<[^>]*>?/gm, '').trim() || ''; // Just text for badge
+        const name = getText("Tên phương pháp").replace(/<[^>]*>?/gm, '').trim() || '';
+        const details = getText("Chi tiết");
+        const pros = getText("Ưu điểm");
+        const cons = getText("Nhược điểm");
+        const price = getText("Giá thành").replace(/<[^>]*>?/gm, '').trim() || '';
+
+        const cardHtml = `
+          <div class="comparison-card bg-white border border-slate-200 rounded-[16px] shadow-sm overflow-hidden flex flex-col text-[15px] md:text-[16px] leading-[1.6]">
+            <div class="card-header bg-slate-50 border-b border-slate-100 p-4 md:p-5 flex flex-wrap items-center justify-between gap-4">
+              <div class="flex items-center gap-3">
+                <span class="inline-flex items-center justify-center bg-brand text-white font-bold text-sm w-8 h-8 rounded-full shrink-0">${stt}</span>
+                <h3 class="font-bold text-navy text-lg md:text-xl !m-0 !mt-0 !mb-0">${name}</h3>
+              </div>
+              <div class="shrink-0 text-right">
+                <span class="inline-block bg-slate-800 text-white px-3 py-1.5 rounded-lg font-medium text-sm whitespace-nowrap">${price}</span>
+              </div>
+            </div>
+            <div class="card-body p-4 md:p-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div class="col-span-1 md:col-span-2 lg:col-span-1">
+                <h4 class="font-bold text-slate-700 mb-2 uppercase text-xs tracking-wider">Chi tiết</h4>
+                <div class="text-slate-600">${details}</div>
+              </div>
+              <div class="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4">
+                <h4 class="font-bold text-emerald-700 mb-2 uppercase text-xs tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-check text-emerald-500"></i> Ưu điểm
+                </h4>
+                <div class="text-slate-700">${pros}</div>
+              </div>
+              <div class="bg-red-50/50 border border-red-100 rounded-xl p-4">
+                <h4 class="font-bold text-red-700 mb-2 uppercase text-xs tracking-wider flex items-center gap-1.5">
+                  <i class="fa-solid fa-xmark text-red-500"></i> Nhược điểm
+                </h4>
+                <div class="text-slate-700">${cons}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        $container.append(cardHtml);
+      }
+      
+      $(el).replaceWith($container);
+    }
+  });
+
   return { toc, html: $.html() };
 }
 
