@@ -13,9 +13,6 @@ const lora = Lora({ weight: ['500', '600', '700'], subsets: ['latin', 'vietnames
 export const metadata: Metadata = {
   title: 'Chăm Sóc Răng Niềng Chuyên Biệt | Fluocaril',
   description: 'Khám phá sản phẩm và kiến thức chăm sóc răng miệng dành cho người niềng, người dùng khay trong suốt và hàm duy trì.',
-  icons: {
-    icon: '/favicon.ico',
-  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
