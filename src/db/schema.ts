@@ -22,6 +22,9 @@ export const products = pgTable('products', {
   isFeatured: boolean('is_featured').default(false),
   status: text('status').default('Active'),
   shopeeUrl: text('shopee_url'),
+  ingredients: text('ingredients'),
+  productSpecifications: text('product_specifications'),
+  usageInstructions: text('usage_instructions'),
   createdAt: timestamp('created_at').defaultNow(),
 });
 

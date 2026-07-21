@@ -19,6 +19,10 @@ export async function createProduct(formData: FormData) {
     
     let shopeeUrl = formData.get('shopeeUrl') as string | null;
     if (!shopeeUrl) shopeeUrl = null;
+
+    const ingredients = (formData.get('ingredients') as string)?.trim() || null;
+    const productSpecifications = (formData.get('productSpecifications') as string)?.trim() || null;
+    const usageInstructions = (formData.get('usageInstructions') as string)?.trim() || null;
     
     const imageFile = formData.get('imageFile') as File;
     if (imageFile && imageFile.size > 0) {
@@ -41,11 +45,15 @@ export async function createProduct(formData: FormData) {
       categoryId,
       badge,
       shopeeUrl,
+      ingredients,
+      productSpecifications,
+      usageInstructions,
       status: status || 'Active',
     });
 
     revalidatePath('/admin/products');
     revalidatePath('/san-pham');
+    revalidatePath(`/san-pham/${slug}`);
     revalidatePath('/');
     return { success: true };
   } catch (error: any) {
@@ -68,6 +76,10 @@ export async function updateProduct(id: number, formData: FormData) {
     
     let shopeeUrl = formData.get('shopeeUrl') as string | null;
     if (!shopeeUrl) shopeeUrl = null;
+
+    const ingredients = (formData.get('ingredients') as string)?.trim() || null;
+    const productSpecifications = (formData.get('productSpecifications') as string)?.trim() || null;
+    const usageInstructions = (formData.get('usageInstructions') as string)?.trim() || null;
     
     const imageFile = formData.get('imageFile') as File;
     if (imageFile && imageFile.size > 0) {
@@ -90,11 +102,15 @@ export async function updateProduct(id: number, formData: FormData) {
       categoryId,
       badge,
       shopeeUrl,
+      ingredients,
+      productSpecifications,
+      usageInstructions,
       status: status || 'Active',
     }).where(eq(products.id, id));
 
     revalidatePath('/admin/products');
     revalidatePath('/san-pham');
+    revalidatePath(`/san-pham/${slug}`);
     revalidatePath('/');
     return { success: true };
   } catch (error: any) {

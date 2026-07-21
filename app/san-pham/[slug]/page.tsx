@@ -63,38 +63,49 @@ export default async function ProductDetailPage({ params }: Props) {
     notFound();
   }
 
-  const accordionItems = [
-    {
+  const accordionItems: { title: string; content: React.ReactNode }[] = [];
+  
+  if (product.ingredients && product.ingredients.trim() !== '') {
+    accordionItems.push({
       title: 'Thành phần',
       content: (
         <ul className="list-disc pl-5 space-y-1">
-          <li>Sodium Fluoride (1480ppm) giúp tái khoáng hóa men răng.</li>
-          <li>Thành phần kháng khuẩn giúp giảm mảng bám.</li>
-          <li>Chiết xuất tự nhiên dịu nhẹ cho nướu nhạy cảm.</li>
-          <li>Không chứa cồn (đối với nước súc miệng), an toàn khi sử dụng hàng ngày.</li>
+          {product.ingredients.split('\n').map((line: string, idx: number) => line.trim() ? <li key={idx}>{line.trim()}</li> : null)}
         </ul>
       )
-    },
-    {
+    });
+  }
+
+  if (product.productSpecifications && product.productSpecifications.trim() !== '') {
+    accordionItems.push({
       title: 'Thông số sản phẩm',
       content: (
         <div className="space-y-2">
-          <p><span className="font-medium text-slate-700">Dung tích / Trọng lượng:</span> Thay đổi theo sản phẩm (VD: 100ml, 150g, 500ml)</p>
-          <p><span className="font-medium text-slate-700">Xuất xứ thương hiệu:</span> Pháp</p>
-          <p><span className="font-medium text-slate-700">Đối tượng sử dụng:</span> Người lớn và trẻ em trên 12 tuổi, đặc biệt dành cho người đang niềng răng, chỉnh nha.</p>
-          <p><span className="font-medium text-slate-700">Hạn sử dụng:</span> Xem trên bao bì sản phẩm.</p>
+          {product.productSpecifications.split('\n').map((line: string, idx: number) => {
+            if (!line.trim()) return null;
+            const colonIdx = line.indexOf(':');
+            if (colonIdx !== -1) {
+              const before = line.substring(0, colonIdx + 1);
+              const after = line.substring(colonIdx + 1);
+              return <p key={idx}><span className="font-medium text-slate-700">{before}</span>{after}</p>;
+            }
+            return <p key={idx}>{line.trim()}</p>;
+          })}
         </div>
       )
-    },
-    {
+    });
+  }
+
+  if (product.usageInstructions && product.usageInstructions.trim() !== '') {
+    accordionItems.push({
       title: 'Hướng dẫn sử dụng',
       content: (
-        <p>
-          Sử dụng 2 lần mỗi ngày (sáng và tối) hoặc sau các bữa ăn. Đối với kem đánh răng, lấy một lượng vừa đủ lên bàn chải và chải đều các mặt răng. Đối với nước súc miệng, ngậm và súc trong khoảng 30 giây rồi nhổ bỏ, không cần súc lại với nước.
+        <p className="whitespace-pre-line">
+          {product.usageInstructions.trim()}
         </p>
       )
-    }
-  ];
+    });
+  }
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -198,7 +209,9 @@ export default async function ProductDetailPage({ params }: Props) {
             {product.description || "Chưa có mô tả chi tiết cho sản phẩm này. Fluocaril mang đến các giải pháp chuyên biệt giúp bảo vệ và chăm sóc sức khỏe răng miệng tối ưu trong suốt quá trình chỉnh nha."}
           </p>
           
-          <ProductAccordion items={accordionItems} />
+          {accordionItems.length > 0 && (
+            <ProductAccordion items={accordionItems} />
+          )}
 
           <div className="space-y-4 mt-8 mb-8">
             <div className="flex items-start">

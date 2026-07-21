@@ -168,6 +168,23 @@ export default function ProductForm({ product, categories }: { product?: any, ca
                   <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả</label>
                   <textarea defaultValue={product?.description} name="description" rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
                 </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Thành phần</label>
+                  <textarea defaultValue={product?.ingredients} name="ingredients" rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
+                  <p className="text-xs text-gray-500 mt-1">Mỗi dòng sẽ hiển thị thành một gạch đầu dòng.</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Thông số sản phẩm</label>
+                  <textarea defaultValue={product?.productSpecifications} name="productSpecifications" rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
+                  <p className="text-xs text-gray-500 mt-1">Mỗi dòng nhập theo dạng Tên thông số: Nội dung.</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Hướng dẫn sử dụng</label>
+                  <textarea defaultValue={product?.usageInstructions} name="usageInstructions" rows={4} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"></textarea>
+                </div>
               </form>
             </div>
             
