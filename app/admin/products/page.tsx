@@ -1,7 +1,8 @@
 import { db } from '@/src/db';
-import { products, categories } from '@/src/db/schema';
+import { products, categories, productVariants } from '@/src/db/schema';
 import { desc } from 'drizzle-orm';
 import ProductForm from './ProductForm';
+import ProductVariantsModal from './ProductVariantsModal';
 import DeleteButton from './DeleteButton';
 
 export const dynamic = "force-dynamic";
@@ -9,9 +10,11 @@ export const dynamic = "force-dynamic";
 export default async function ProductsPage() {
   let productsList: any[] = [];
   let categoriesList: any[] = [];
+  let variantsList: any[] = [];
   try {
     productsList = await db.select().from(products).orderBy(desc(products.createdAt));
     categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
+    variantsList = await db.select().from(productVariants).orderBy(desc(productVariants.sortOrder));
   } catch (error) {
     console.error("Database error:", error);
   }
@@ -31,13 +34,16 @@ export default async function ProductsPage() {
                 <th className="px-6 py-4">Hình ảnh</th>
                 <th className="px-6 py-4">Tên sản phẩm</th>
                 <th className="px-6 py-4">Hệ sinh thái</th>
+                <th className="px-6 py-4">Biến thể</th>
                 <th className="px-6 py-4">Trạng thái</th>
                 <th className="px-6 py-4 text-right">Hành động</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
               {productsList.length > 0 ? (
-                productsList.map((product) => (
+                productsList.map((product) => {
+                  const pVariants = variantsList.filter(v => v.productId === product.id);
+                  return (
                   <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
                       {product.imageUrl && product.imageUrl !== "" ? (
@@ -61,20 +67,24 @@ export default async function ProductsPage() {
                       <div className="text-sm text-gray-500 mt-1">{product.slug}</div>
                     </td>
                     <td className="px-6 py-4 text-gray-600">{categoriesList.find(c => c.id === product.categoryId)?.name || '—'}</td>
+                    <td className="px-6 py-4 text-gray-600">
+                      <span className="font-medium">{pVariants.length}</span>
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${product.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                         {product.status || 'Active'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right flex items-center justify-end space-x-2">
+                      <ProductVariantsModal product={product} variants={pVariants} />
                       <ProductForm product={product} categories={categoriesList} />
                       <DeleteButton id={product.id} />
                     </td>
                   </tr>
-                ))
+                )})
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
                     Chưa có sản phẩm nào. Hãy thêm sản phẩm mới!
                   </td>
                 </tr>

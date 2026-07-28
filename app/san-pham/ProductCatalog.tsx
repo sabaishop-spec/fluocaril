@@ -24,6 +24,19 @@ function CatalogContent({ products, categories }: { products: any[], categories:
   const [quickViewProduct, setQuickViewProduct] = useState<any | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(12);
+  const [selectedVariants, setSelectedVariants] = useState<Record<number, any>>({});
+
+  const getActiveVariant = (prod: any) => {
+    if (selectedVariants[prod.id]) return selectedVariants[prod.id];
+    if (!prod.variants || prod.variants.length === 0) return null;
+    return prod.variants.find((v: any) => v.isDefault) || prod.variants[0];
+  };
+
+  const handleVariantSelect = (e: React.MouseEvent, prodId: number, variant: any) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSelectedVariants(prev => ({ ...prev, [prodId]: variant }));
+  };
 
   // Reset visibleCount when filters change
   useEffect(() => {
@@ -450,19 +463,24 @@ function CatalogContent({ products, categories }: { products: any[], categories:
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-          {displayedProducts.map((prod) => (
-            <Link href={`/san-pham/${prod.slug}`} key={prod.id} className="group block cursor-pointer">
+          {displayedProducts.map((prod) => {
+            const activeVariant = getActiveVariant(prod);
+            const currentImage = activeVariant?.imageUrl || prod.imageUrl || prod.image || "https://picsum.photos/seed/placeholder/400/533";
+            const variants = prod.variants || [];
+
+            return (
+            <Link href={`/san-pham/${prod.slug}${activeVariant ? `?variant=${activeVariant.slug}` : ''}`} key={prod.id} className="group block cursor-pointer">
               <motion.div
                 whileHover={{ scale: 1.02, boxShadow: "0px 10px 30px rgba(0,0,0,0.1)" }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="h-full flex flex-col rounded-2xl bg-white p-1 pb-3"
               >
                 {/* Image Box */}
-                <div className="relative aspect-[3/4] bg-[#f8f8f8] rounded-xl overflow-hidden mb-3">
+                <div className="relative aspect-square bg-slate-50/50 rounded-xl overflow-hidden mb-3">
                 <ProductImage
-                  src={prod.imageUrl || prod.image || "https://picsum.photos/seed/placeholder/400/533"}
+                  src={currentImage}
                   alt={prod.name}
-                  className="group-hover:scale-105"
+                  className="object-contain p-3 sm:p-5 md:p-8 group-hover:scale-105"
                 />
 
                 {/* Badge / Tag */}
@@ -485,7 +503,13 @@ function CatalogContent({ products, categories }: { products: any[], categories:
                   <button 
                     onClick={(e) => {
                       e.preventDefault();
-                      setQuickViewProduct(prod);
+                      e.stopPropagation();
+                      const overrideProd = { 
+                        ...prod, 
+                        imageUrl: currentImage,
+                        shopeeUrl: activeVariant?.shopeeUrl || prod.shopeeUrl
+                      };
+                      setQuickViewProduct(overrideProd);
                     }}
                     className="flex-1 bg-white text-navy border border-white hover:border-slate-200 text-sm font-semibold py-2.5 rounded-lg flex items-center justify-center transition-colors shadow-lg"
                   >
@@ -508,10 +532,30 @@ function CatalogContent({ products, categories }: { products: any[], categories:
                     {prod.price}
                   </p>
                 )}
+                {variants.length > 0 && (
+                  <div className="mt-2 flex items-center gap-1.5" onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}>
+                    {variants.slice(0, 4).map((v: any) => (
+                      <button
+                        key={v.id}
+                        onClick={(e) => handleVariantSelect(e, prod.id, v)}
+                        title={v.name}
+                        aria-label={v.name}
+                        className={cn(
+                          "w-5 h-5 rounded-full border shadow-sm",
+                          activeVariant?.id === v.id ? "ring-2 ring-teal-500 ring-offset-2 border-transparent" : "border-gray-200 hover:scale-110 transition-transform"
+                        )}
+                        style={{ backgroundColor: v.swatchColor }}
+                      />
+                    ))}
+                    {variants.length > 4 && (
+                      <span className="text-xs text-slate-500 font-medium ml-1">+{variants.length - 4}</span>
+                    )}
+                  </div>
+                )}
               </div>
               </motion.div>
             </Link>
-          ))}
+          )})}
         </div>
         {filteredProducts.length === 0 && (
           <div className="text-center py-20 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col items-center justify-center">

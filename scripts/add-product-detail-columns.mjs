@@ -23,6 +23,25 @@ async function runMigration() {
         ADD COLUMN IF NOT EXISTS ingredients text,
         ADD COLUMN IF NOT EXISTS product_specifications text,
         ADD COLUMN IF NOT EXISTS usage_instructions text;
+
+      CREATE TABLE IF NOT EXISTS public.product_variants (
+        id SERIAL PRIMARY KEY,
+        product_id INTEGER NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+        name TEXT NOT NULL,
+        slug TEXT NOT NULL,
+        swatch_color TEXT NOT NULL,
+        image_url TEXT,
+        shopee_url TEXT,
+        is_default BOOLEAN DEFAULT false,
+        sort_order INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'Active',
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_product_variants_product_id ON public.product_variants(product_id);
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_product_variants_product_slug ON public.product_variants(product_id, slug);
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_product_variants_single_default ON public.product_variants(product_id) WHERE is_default = true;
     `);
 
     await client.query('COMMIT');

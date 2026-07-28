@@ -1,7 +1,7 @@
 import { ProductImage } from "@/components/ProductImage";
 import { db } from '@/src/db';
-import { products, categories as categoriesTable } from '@/src/db/schema';
-import { eq, and, ne } from 'drizzle-orm';
+import { products, categories as categoriesTable, productVariants } from '@/src/db/schema';
+import { eq, and, ne, asc } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { ChevronRight, Check } from "lucide-react";
 import Link from "next/link";
@@ -15,9 +15,10 @@ export const dynamic = 'force-dynamic';
 
 type Props = {
   params: Promise<{ slug: string }>;
+  searchParams: Promise<{ variant?: string }>;
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: Props): Promise<Metadata> {
   const { slug } = await params;
   let product = null;
   if (slug) {
@@ -37,17 +38,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function ProductDetailPage({ params }: Props) {
+export default async function ProductDetailPage({ params, searchParams }: Props) {
   const { slug } = await params;
+  const search = await searchParams;
+  const variantSlug = search.variant;
+
   let product = null;
   let category = null;
   let relatedProductsList: any[] = [];
+  let variants: any[] = [];
   
   if (slug) {
     try {
       const productList = await db.select().from(products).where(eq(products.slug, slug)).limit(1);
       product = productList[0];
       if (product) {
+        variants = await db.select().from(productVariants)
+          .where(and(eq(productVariants.productId, product.id), eq(productVariants.status, 'Active')))
+          .orderBy(asc(productVariants.sortOrder), asc(productVariants.id));
+
         if (product.categoryId) {
           const categoryList = await db.select().from(categoriesTable).where(eq(categoriesTable.id, product.categoryId)).limit(1);
           category = categoryList[0];
@@ -62,6 +71,19 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) {
     notFound();
   }
+
+  let activeVariant = null;
+  if (variants.length > 0) {
+    if (variantSlug) {
+      activeVariant = variants.find(v => v.slug === variantSlug) || null;
+    }
+    if (!activeVariant) {
+      activeVariant = variants.find(v => v.isDefault) || variants[0];
+    }
+  }
+
+  const displayImage = activeVariant?.imageUrl || product.imageUrl || "https://picsum.photos/seed/placeholder/600/800";
+  const displayShopeeUrl = activeVariant?.shopeeUrl || product.shopeeUrl;
 
   const accordionItems: { title: string; content: React.ReactNode }[] = [];
   
@@ -111,7 +133,7 @@ export default async function ProductDetailPage({ params }: Props) {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
-    image: product.imageUrl || 'https://picsum.photos/seed/placeholder/400/533',
+    image: displayImage,
     description: product.description || `Sản phẩm ${product.name} chuyên biệt cho người niềng răng.`,
     brand: {
       '@type': 'Brand',
@@ -122,7 +144,7 @@ export default async function ProductDetailPage({ params }: Props) {
       priceCurrency: 'VND',
       price: '0',
       availability: 'https://schema.org/InStock',
-      url: `https://fluocaril.com.vn/san-pham/${product.slug}`
+      url: `https://fluocaril.com.vn/san-pham/${product.slug}${activeVariant ? `?variant=${activeVariant.slug}` : ''}`
     }
   };
 
@@ -140,7 +162,7 @@ export default async function ProductDetailPage({ params }: Props) {
         <div>
           <div className="relative aspect-square md:aspect-[3/4] bg-[#f8f8f8] rounded-2xl overflow-hidden shadow-sm">
             <ProductImage
-              src={product.imageUrl || "https://picsum.photos/seed/placeholder/600/800"}
+              src={displayImage}
               alt={product.name}
               priority
             />
@@ -204,6 +226,31 @@ export default async function ProductDetailPage({ params }: Props) {
             {product.name}
           </h1>
           
+          {variants.length > 0 && (
+            <div className="mt-6 mb-2">
+              <p className="text-sm font-medium text-slate-700 mb-3">
+                Hương vị: <span className="text-slate-900 font-bold">{activeVariant?.name}</span>
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                {variants.map(v => (
+                  <Link 
+                    key={v.id}
+                    href={`?variant=${v.slug}`}
+                    scroll={false}
+                    title={v.name}
+                    aria-label={v.name}
+                    className={`w-9 h-9 rounded-full border shadow-sm transition-transform ${
+                      activeVariant?.id === v.id 
+                        ? "ring-2 ring-teal-500 ring-offset-2 border-transparent scale-110" 
+                        : "border-gray-200 hover:scale-110"
+                    }`}
+                    style={{ backgroundColor: v.swatchColor }}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Description */}
           <p className="leading-relaxed text-slate-600 mt-6 font-sans text-base whitespace-pre-line">
             {product.description || "Chưa có mô tả chi tiết cho sản phẩm này. Fluocaril mang đến các giải pháp chuyên biệt giúp bảo vệ và chăm sóc sức khỏe răng miệng tối ưu trong suốt quá trình chỉnh nha."}
@@ -235,9 +282,9 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-auto">
-            {product.shopeeUrl ? (
+            {displayShopeeUrl ? (
               <a
-                href={product.shopeeUrl}
+                href={displayShopeeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 bg-[#ee4d2d] hover:bg-[#d74326] text-white text-base font-bold py-4 rounded-xl shadow-lg hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2"

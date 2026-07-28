@@ -28,11 +28,34 @@ export const products = pgTable('products', {
   createdAt: timestamp('created_at').defaultNow(),
 });
 
-export const productsRelations = relations(products, ({ one }) => ({
+export const productVariants = pgTable('product_variants', {
+  id: serial('id').primaryKey(),
+  productId: integer('product_id').notNull().references(() => products.id, { onDelete: 'cascade' }),
+  name: text('name').notNull(),
+  slug: text('slug').notNull(),
+  swatchColor: text('swatch_color').notNull(),
+  imageUrl: text('image_url'),
+  shopeeUrl: text('shopee_url'),
+  isDefault: boolean('is_default').default(false),
+  sortOrder: integer('sort_order').default(0),
+  status: text('status').default('Active'),
+  createdAt: timestamp('created_at').defaultNow(),
+  updatedAt: timestamp('updated_at').defaultNow(),
+});
+
+export const productVariantsRelations = relations(productVariants, ({ one }) => ({
+  product: one(products, {
+    fields: [productVariants.productId],
+    references: [products.id],
+  }),
+}));
+
+export const productsRelations = relations(products, ({ one, many }) => ({
   categoryRel: one(categories, {
     fields: [products.categoryId],
     references: [categories.id],
   }),
+  variants: many(productVariants),
 }));
 
 export const categoriesRelations = relations(categories, ({ many }) => ({
