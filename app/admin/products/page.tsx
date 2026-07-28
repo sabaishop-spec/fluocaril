@@ -1,8 +1,9 @@
 import { db } from '@/src/db';
-import { products, categories, productVariants } from '@/src/db/schema';
-import { desc } from 'drizzle-orm';
+import { products, categories, productVariants, productDescriptionImages } from '@/src/db/schema';
+import { desc, asc } from 'drizzle-orm';
 import ProductForm from './ProductForm';
 import ProductVariantsModal from './ProductVariantsModal';
+import ProductDescriptionImagesModal from './ProductDescriptionImagesModal';
 import DeleteButton from './DeleteButton';
 
 export const dynamic = "force-dynamic";
@@ -11,10 +12,12 @@ export default async function ProductsPage() {
   let productsList: any[] = [];
   let categoriesList: any[] = [];
   let variantsList: any[] = [];
+  let descImagesList: any[] = [];
   try {
     productsList = await db.select().from(products).orderBy(desc(products.createdAt));
     categoriesList = await db.select().from(categories).orderBy(desc(categories.createdAt));
     variantsList = await db.select().from(productVariants).orderBy(desc(productVariants.sortOrder));
+    descImagesList = await db.select().from(productDescriptionImages).orderBy(asc(productDescriptionImages.sortOrder), asc(productDescriptionImages.id));
   } catch (error) {
     console.error("Database error:", error);
   }
@@ -35,6 +38,7 @@ export default async function ProductsPage() {
                 <th className="px-6 py-4">Tên sản phẩm</th>
                 <th className="px-6 py-4">Hệ sinh thái</th>
                 <th className="px-6 py-4">Biến thể</th>
+                <th className="px-6 py-4">Ảnh mô tả</th>
                 <th className="px-6 py-4">Trạng thái</th>
                 <th className="px-6 py-4 text-right">Hành động</th>
               </tr>
@@ -43,6 +47,7 @@ export default async function ProductsPage() {
               {productsList.length > 0 ? (
                 productsList.map((product) => {
                   const pVariants = variantsList.filter(v => v.productId === product.id);
+                  const pDescImages = descImagesList.filter(img => img.productId === product.id);
                   return (
                   <tr key={product.id} className="hover:bg-gray-50/50 transition-colors">
                     <td className="px-6 py-4">
@@ -70,12 +75,16 @@ export default async function ProductsPage() {
                     <td className="px-6 py-4 text-gray-600">
                       <span className="font-medium">{pVariants.length}</span>
                     </td>
+                    <td className="px-6 py-4 text-gray-600">
+                      <span className="font-medium">{pDescImages.length}</span>
+                    </td>
                     <td className="px-6 py-4">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${product.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
                         {product.status || 'Active'}
                       </span>
                     </td>
                     <td className="px-6 py-4 text-right flex items-center justify-end space-x-2">
+                      <ProductDescriptionImagesModal product={product} images={pDescImages} />
                       <ProductVariantsModal product={product} variants={pVariants} />
                       <ProductForm product={product} categories={categoriesList} />
                       <DeleteButton id={product.id} />
@@ -84,7 +93,7 @@ export default async function ProductsPage() {
                 )})
               ) : (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-gray-500">
+                  <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
                     Chưa có sản phẩm nào. Hãy thêm sản phẩm mới!
                   </td>
                 </tr>

@@ -1,12 +1,13 @@
 import { ProductImage } from "@/components/ProductImage";
 import { db } from '@/src/db';
-import { products, categories as categoriesTable, productVariants } from '@/src/db/schema';
+import { products, categories as categoriesTable, productVariants, productDescriptionImages } from '@/src/db/schema';
 import { eq, and, ne, asc } from 'drizzle-orm';
 import { notFound } from 'next/navigation';
 import { ChevronRight, Check } from "lucide-react";
 import Link from "next/link";
 import type { Metadata } from 'next';
 import Script from "next/script";
+import Image from "next/image";
 import { RelatedProducts } from "./RelatedProducts";
 import { ShareButton } from "./ShareButton";
 import { ProductAccordion } from "./ProductAccordion";
@@ -47,6 +48,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
   let category = null;
   let relatedProductsList: any[] = [];
   let variants: any[] = [];
+  let descriptionImages: any[] = [];
   
   if (slug) {
     try {
@@ -56,6 +58,10 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         variants = await db.select().from(productVariants)
           .where(and(eq(productVariants.productId, product.id), eq(productVariants.status, 'Active')))
           .orderBy(asc(productVariants.sortOrder), asc(productVariants.id));
+
+        descriptionImages = await db.select().from(productDescriptionImages)
+          .where(and(eq(productDescriptionImages.productId, product.id), eq(productDescriptionImages.status, 'Active')))
+          .orderBy(asc(productDescriptionImages.sortOrder), asc(productDescriptionImages.id));
 
         if (product.categoryId) {
           const categoryList = await db.select().from(categoriesTable).where(eq(categoriesTable.id, product.categoryId)).limit(1);
@@ -305,7 +311,31 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         </div>
       </div>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {descriptionImages.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 border-t border-slate-100">
+          <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif text-center">
+            Hình ảnh mô tả sản phẩm
+          </h2>
+          <div className={descriptionImages.length === 1 
+            ? "max-w-xl mx-auto" 
+            : "grid grid-cols-1 md:grid-cols-2 gap-6"
+          }>
+            {descriptionImages.map((img: any, idx: number) => (
+              <div key={img.id} className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm">
+                <Image
+                  src={img.imageUrl}
+                  alt={img.altText || `${product.name} - ảnh mô tả ${idx + 1}`}
+                  fill
+                  className="object-contain"
+                  sizes={descriptionImages.length === 1 ? "(max-width: 768px) 100vw, 576px" : "(max-width: 768px) 100vw, 50vw"}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <RelatedProducts products={relatedProductsList} />
       </div>
     </div>

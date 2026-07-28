@@ -42,6 +42,20 @@ async function runMigration() {
       CREATE INDEX IF NOT EXISTS idx_product_variants_product_id ON public.product_variants(product_id);
       CREATE UNIQUE INDEX IF NOT EXISTS idx_product_variants_product_slug ON public.product_variants(product_id, slug);
       CREATE UNIQUE INDEX IF NOT EXISTS idx_product_variants_single_default ON public.product_variants(product_id) WHERE is_default = true;
+      
+      CREATE TABLE IF NOT EXISTS public.product_description_images (
+        id SERIAL PRIMARY KEY,
+        product_id INTEGER NOT NULL REFERENCES public.products(id) ON DELETE CASCADE,
+        image_url TEXT NOT NULL,
+        alt_text TEXT,
+        sort_order INTEGER DEFAULT 0,
+        status TEXT DEFAULT 'Active',
+        created_at TIMESTAMP DEFAULT now(),
+        updated_at TIMESTAMP DEFAULT now()
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_product_description_images_product_id ON public.product_description_images(product_id);
+      CREATE INDEX IF NOT EXISTS idx_product_description_images_sort ON public.product_description_images(product_id, sort_order);
     `);
 
     await client.query('COMMIT');
