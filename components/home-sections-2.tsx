@@ -16,7 +16,7 @@ export function WhySpecialized() {
   ];
 
   return (
-    <section className="py-24 bg-white relative">
+    <section id="tai-sao-can-san-pham-chuyen-biet" className="py-24 bg-white relative scroll-mt-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-2 gap-16 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}

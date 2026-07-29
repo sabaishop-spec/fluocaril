@@ -135,19 +135,18 @@ export function HeroIntro() {
             nha mỗi ngày.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Button
-              size="lg"
-              className="rounded-full text-base font-semibold bg-brand hover:bg-brand-dark text-white border-0 px-8"
+            <Link
+              href="/san-pham"
+              className="inline-flex items-center justify-center h-11 px-8 rounded-full text-base font-semibold bg-brand hover:bg-brand-dark text-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
             >
               Khám phá sản phẩm
-            </Button>
-            <Button
-              size="lg"
-              variant="outline"
-              className="rounded-full text-base font-semibold border-2 border-brand text-brand hover:bg-brand-light px-8"
+            </Link>
+            <Link
+              href="#tai-sao-can-san-pham-chuyen-biet"
+              className="inline-flex items-center justify-center h-11 px-8 rounded-full text-base font-semibold border-2 border-brand text-brand bg-white hover:bg-brand-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
             >
               Tìm hiểu thêm
-            </Button>
+            </Link>
           </div>
         </motion.div>
       </div>
