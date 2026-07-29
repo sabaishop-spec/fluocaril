@@ -1,6 +1,14 @@
 import { pgTable, serial, text, timestamp, boolean, integer, jsonb } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
+export const loginAttempts = pgTable('login_attempts', {
+  id: serial('id').primaryKey(),
+  ipHash: text('ip_hash').notNull().unique(),
+  attempts: integer('attempts').default(1),
+  lastAttempt: timestamp('last_attempt').defaultNow(),
+  lockUntil: timestamp('lock_until'),
+});
+
 export const categories = pgTable('categories', {
   id: serial('id').primaryKey(),
   name: text('name').notNull(),

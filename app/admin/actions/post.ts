@@ -3,8 +3,10 @@
 import { db } from '@/src/db';
 import { posts } from '@/src/db/schema';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createPost(formData: FormData) {
+  await requireAdmin();
   try {
     const title = formData.get('title') as string;
     const slug = formData.get('slug') as string;
@@ -56,6 +58,7 @@ export async function createPost(formData: FormData) {
 }
 
 export async function updatePost(id: number, formData: FormData) {
+  await requireAdmin();
   try {
     const title = formData.get('title') as string;
     const slug = formData.get('slug') as string;
@@ -108,6 +111,7 @@ export async function updatePost(id: number, formData: FormData) {
 }
 
 export async function deletePosts(ids: string[]) {
+  await requireAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, error: 'Chưa chọn bài viết nào.' };
     
@@ -130,6 +134,7 @@ export async function deletePosts(ids: string[]) {
 }
 
 export async function updatePostsStatus(ids: string[], status: string) {
+  await requireAdmin();
   try {
     if (!ids || ids.length === 0) return { success: false, error: 'Chưa chọn bài viết nào.' };
     

@@ -4,8 +4,10 @@ import { db } from '@/src/db';
 import { productVariants, products } from '@/src/db/schema';
 import { eq, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createProductVariant(productId: number, formData: FormData) {
+  await requireAdmin();
   try {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -69,6 +71,7 @@ export async function createProductVariant(productId: number, formData: FormData
 }
 
 export async function updateProductVariant(id: number, formData: FormData) {
+  await requireAdmin();
   try {
     const productIdStr = formData.get('productId') as string;
     const productId = parseInt(productIdStr, 10);
@@ -134,6 +137,7 @@ export async function updateProductVariant(id: number, formData: FormData) {
 }
 
 export async function deleteProductVariant(id: number) {
+  await requireAdmin();
   try {
     const variant = await db.query.productVariants.findFirst({ where: eq(productVariants.id, id) });
     if (!variant) throw new Error('Biến thể không tồn tại');
@@ -175,6 +179,7 @@ export async function deleteProductVariant(id: number) {
 }
 
 export async function setDefaultProductVariant(id: number, productId: number) {
+  await requireAdmin();
   try {
     await db.transaction(async (tx) => {
       await tx.update(productVariants)
@@ -202,6 +207,7 @@ export async function setDefaultProductVariant(id: number, productId: number) {
 }
 
 export async function updateProductVariantLabel(productId: number, label: string) {
+  await requireAdmin();
   try {
     const cleanLabel = label.trim().substring(0, 50) || 'Phân loại';
     

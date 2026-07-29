@@ -4,8 +4,10 @@ import { db } from '@/src/db';
 import { categories } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createCategory(formData: FormData) {
+  await requireAdmin();
   try {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -43,6 +45,7 @@ export async function createCategory(formData: FormData) {
 }
 
 export async function updateCategory(id: number, formData: FormData) {
+  await requireAdmin();
   try {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -80,6 +83,7 @@ export async function updateCategory(id: number, formData: FormData) {
 }
 
 export async function deleteCategory(id: number) {
+  await requireAdmin();
   try {
     await db.delete(categories).where(eq(categories.id, id));
     revalidatePath('/admin/categories');

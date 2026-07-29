@@ -1,16 +1,18 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
-import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon, LayoutTemplate, PanelBottom } from 'lucide-react';
+import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon, LayoutTemplate, PanelBottom, LogOut } from 'lucide-react';
+import { logoutAction } from '@/app/login/actions';
+import { redirect } from 'next/navigation';
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md">
+      <aside className="w-64 bg-white shadow-md flex flex-col">
         <div className="p-6">
           <h2 className="text-2xl font-bold text-gray-800 tracking-tight">Admin</h2>
         </div>
-        <nav className="mt-6">
+        <nav className="mt-2 flex-1">
           <Link href="/admin" className="flex items-center px-6 py-3 text-gray-600 hover:bg-blue-50 hover:text-blue-600 transition-colors">
             <LayoutDashboard className="w-5 h-5 mr-3" />
             <span className="font-medium">Tổng quan</span>
@@ -48,6 +50,19 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
             <span className="font-medium">Cấu hình Footer</span>
           </Link>
         </nav>
+        
+        <div className="p-4 border-t border-gray-100">
+          <form action={async () => {
+            'use server';
+            await logoutAction();
+            redirect('/login');
+          }}>
+            <button type="submit" className="flex items-center w-full px-4 py-2 text-gray-600 hover:bg-red-50 hover:text-red-600 rounded-lg transition-colors">
+              <LogOut className="w-5 h-5 mr-3" />
+              <span className="font-medium">Đăng xuất</span>
+            </button>
+          </form>
+        </div>
       </aside>
 
       {/* Main Content */}

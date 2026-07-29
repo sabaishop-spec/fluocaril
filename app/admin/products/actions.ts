@@ -4,8 +4,10 @@ import { db } from '@/src/db';
 import { products } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createProduct(formData: FormData) {
+  await requireAdmin();
   try {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -63,6 +65,7 @@ export async function createProduct(formData: FormData) {
 }
 
 export async function updateProduct(id: number, formData: FormData) {
+  await requireAdmin();
   try {
     const name = formData.get('name') as string;
     const slug = formData.get('slug') as string;
@@ -120,6 +123,7 @@ export async function updateProduct(id: number, formData: FormData) {
 }
 
 export async function deleteProduct(id: number) {
+  await requireAdmin();
   try {
     await db.delete(products).where(eq(products.id, id));
     revalidatePath('/admin/products');

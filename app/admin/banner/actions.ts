@@ -4,8 +4,10 @@ import { db } from '@/src/db';
 import { siteSettings } from '@/src/db/schema';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function updateHeroBanner(formData: FormData) {
+  await requireAdmin();
   try {
     const countStr = formData.get('count') as string;
     const count = parseInt(countStr || '0', 10);

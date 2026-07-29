@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { loginAction } from './actions';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -10,21 +11,26 @@ export default function LoginPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setMessage('');
     
-    // Đưa email về chữ thường để chống lỗi tự động viết hoa
-    if (email.toLowerCase() === 'sabaishop7979@gmail.com' && password === 'Fluocaril@123') {
+    const formData = new FormData();
+    formData.append('email', email);
+    formData.append('password', password);
+
+    const result = await loginAction(formData);
+
+    if (result.success) {
       setIsSuccess(true);
-      setMessage('✅ Đăng nhập thành công! Đang vào hệ thống...');
-      
-      // Chờ 1.5 giây để thấy thông báo rồi mới chuyển trang
+      setMessage(result.message);
       setTimeout(() => {
-        window.location.href = '/admin';
-      }, 1500);
+        router.push('/admin');
+        router.refresh();
+      }, 1000);
     } else {
       setIsSuccess(false);
-      setMessage('❌ Tài khoản hoặc mật khẩu không chính xác.');
+      setMessage(result.message);
     }
   };
 

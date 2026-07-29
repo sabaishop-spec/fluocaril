@@ -2,8 +2,10 @@
 
 import { put } from '@vercel/blob';
 import { sanitizeFilename } from '@/lib/utils';
+import { requireAdmin } from '@/lib/auth';
 
 export async function uploadImage(formData: FormData) {
+  await requireAdmin();
   try {
     const file = formData.get('file') as File;
     if (!file) {

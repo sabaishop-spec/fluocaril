@@ -6,8 +6,10 @@ import { eq, and } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { put } from '@vercel/blob';
 import { sanitizeFilename } from '@/lib/utils';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createProductDescriptionImages(productId: number, formData: FormData) {
+  await requireAdmin();
   try {
     const images = formData.getAll('imageFiles') as File[];
     if (!images || images.length === 0) return { success: false, error: 'Không có ảnh nào được chọn' };
@@ -58,6 +60,7 @@ export async function createProductDescriptionImages(productId: number, formData
 }
 
 export async function updateProductDescriptionImage(id: number, formData: FormData) {
+  await requireAdmin();
   try {
     const productIdStr = formData.get('productId') as string;
     const productId = parseInt(productIdStr, 10);
@@ -102,6 +105,7 @@ export async function updateProductDescriptionImage(id: number, formData: FormDa
 }
 
 export async function deleteProductDescriptionImage(id: number) {
+  await requireAdmin();
   try {
     const image = await db.query.productDescriptionImages.findFirst({ where: eq(productDescriptionImages.id, id) });
     if (!image) throw new Error('Ảnh không tồn tại');
@@ -123,6 +127,7 @@ export async function deleteProductDescriptionImage(id: number) {
 }
 
 export async function reorderProductDescriptionImages(productId: number, newOrderIds: number[]) {
+  await requireAdmin();
   try {
     await db.transaction(async (tx) => {
       for (let i = 0; i < newOrderIds.length; i++) {

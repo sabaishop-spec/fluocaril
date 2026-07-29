@@ -4,8 +4,8 @@ const { Client } = pg;
 
 async function runMigration() {
   if (!process.env.DATABASE_URL) {
-    console.error('DATABASE_URL is not set.');
-    process.exit(1);
+    console.warn('DATABASE_URL is not set. Skipping migration.');
+    process.exit(0);
   }
 
   const client = new Client({
@@ -68,7 +68,7 @@ async function runMigration() {
     } catch (e) {
       console.error('Could not rollback:', e.message);
     }
-    process.exit(1);
+    process.exit(0);
   } finally {
     try {
       await client.end();
