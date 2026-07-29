@@ -22,7 +22,8 @@ async function runMigration() {
       ALTER TABLE public.products
         ADD COLUMN IF NOT EXISTS ingredients text,
         ADD COLUMN IF NOT EXISTS product_specifications text,
-        ADD COLUMN IF NOT EXISTS usage_instructions text;
+        ADD COLUMN IF NOT EXISTS usage_instructions text,
+        ADD COLUMN IF NOT EXISTS variant_label text DEFAULT 'Phân loại';
 
       CREATE TABLE IF NOT EXISTS public.product_variants (
         id SERIAL PRIMARY KEY,

@@ -19,6 +19,7 @@ export const products = pgTable('products', {
   category: text('category'),
   badge: text('badge'),
   categoryId: integer('category_id').references(() => categories.id),
+  variantLabel: text('variant_label').default('Phân loại'),
   isFeatured: boolean('is_featured').default(false),
   status: text('status').default('Active'),
   shopeeUrl: text('shopee_url'),

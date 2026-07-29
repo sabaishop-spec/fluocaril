@@ -1,4 +1,5 @@
 import { ProductImage } from "@/components/ProductImage";
+import { ProductDescriptionGallery } from "./ProductDescriptionGallery";
 import { db } from '@/src/db';
 import { products, categories as categoriesTable, productVariants, productDescriptionImages } from '@/src/db/schema';
 import { eq, and, ne, asc } from 'drizzle-orm';
@@ -139,7 +140,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
-    image: displayImage,
+    image: descriptionImages.length > 0 ? descriptionImages.map(img => img.imageUrl) : displayImage,
     description: product.description || `Sản phẩm ${product.name} chuyên biệt cho người niềng răng.`,
     brand: {
       '@type': 'Brand',
@@ -166,13 +167,11 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16 max-w-7xl mx-auto px-4 py-8">
         {/* Left Column (Image) */}
         <div>
-          <div className="relative aspect-square md:aspect-[3/4] bg-[#f8f8f8] rounded-2xl overflow-hidden shadow-sm">
-            <ProductImage
-              src={displayImage}
-              alt={product.name}
-              priority
-            />
-          </div>
+          <ProductDescriptionGallery 
+            images={descriptionImages} 
+            fallbackImage={displayImage} 
+            productName={product.name} 
+          />
         </div>
 
         {/* Right Column (Details) */}
@@ -235,7 +234,7 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
           {variants.length > 0 && (
             <div className="mt-6 mb-2">
               <p className="text-sm font-medium text-slate-700 mb-3">
-                Hương vị: <span className="text-slate-900 font-bold">{activeVariant?.name}</span>
+                {product.variantLabel?.trim() || 'Phân loại'}: <span className="text-slate-900 font-bold">{activeVariant?.name}</span>
               </p>
               <div className="flex flex-wrap gap-2.5">
                 {variants.map(v => (
@@ -311,30 +310,6 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
         </div>
       </div>
       
-      {descriptionImages.length > 0 && (
-        <div className="max-w-5xl mx-auto px-4 py-8 md:py-12 border-t border-slate-100">
-          <h2 className="text-2xl font-bold text-slate-900 mb-8 font-serif text-center">
-            Hình ảnh mô tả sản phẩm
-          </h2>
-          <div className={descriptionImages.length === 1 
-            ? "max-w-xl mx-auto" 
-            : "grid grid-cols-1 md:grid-cols-2 gap-6"
-          }>
-            {descriptionImages.map((img: any, idx: number) => (
-              <div key={img.id} className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-white border border-slate-100 shadow-sm">
-                <Image
-                  src={img.imageUrl}
-                  alt={img.altText || `${product.name} - ảnh mô tả ${idx + 1}`}
-                  fill
-                  className="object-contain"
-                  sizes={descriptionImages.length === 1 ? "(max-width: 768px) 100vw, 576px" : "(max-width: 768px) 100vw, 50vw"}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
         <RelatedProducts products={relatedProductsList} />
       </div>

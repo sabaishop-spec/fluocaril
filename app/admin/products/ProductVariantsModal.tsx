@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { createProductVariant, updateProductVariant, deleteProductVariant, setDefaultProductVariant } from './variant-actions';
-import { Palette, Plus, Edit2, X, Trash2, CheckCircle } from 'lucide-react';
+import { createProductVariant, updateProductVariant, deleteProductVariant, setDefaultProductVariant, updateProductVariantLabel } from './variant-actions';
+import { Palette, Plus, Edit2, X, Trash2, CheckCircle, Save } from 'lucide-react';
 import ImageDropzone from './ImageDropzone';
 
 export default function ProductVariantsModal({ product, variants = [] }: { product: any, variants: any[] }) {
@@ -12,6 +12,11 @@ export default function ProductVariantsModal({ product, variants = [] }: { produ
   
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  
+  const [labelLoading, setLabelLoading] = useState(false);
+  const [labelMessage, setLabelMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
+  const [variantLabel, setVariantLabel] = useState(product.variantLabel || 'Phân loại');
+
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
   
@@ -141,6 +146,19 @@ export default function ProductVariantsModal({ product, variants = [] }: { produ
     }
   };
 
+  const handleSaveLabel = async () => {
+    setLabelLoading(true);
+    setLabelMessage(null);
+    const result = await updateProductVariantLabel(product.id, variantLabel);
+    setLabelLoading(false);
+    if (result.success) {
+      setLabelMessage({ type: 'success', text: 'Lưu tên phân loại thành công!' });
+      setTimeout(() => setLabelMessage(null), 2000);
+    } else {
+      setLabelMessage({ type: 'error', text: result.error || 'Lỗi khi lưu' });
+    }
+  };
+
   return (
     <>
       <button 
@@ -213,41 +231,83 @@ export default function ProductVariantsModal({ product, variants = [] }: { produ
               </div>
               
               {/* Form Area */}
-              <div className="w-2/3 overflow-y-auto p-6">
-                {message && (
-                  <div className={`p-4 mb-6 rounded-lg ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-                    {message.text}
-                  </div>
-                )}
-
-                {(!isAdding && !editingVariant) ? (
-                  <div className="h-full flex flex-col items-center justify-center text-gray-400">
-                    <Palette className="w-16 h-16 mb-4 opacity-20" />
-                    <p>Chọn một biến thể để chỉnh sửa hoặc tạo mới</p>
+              <div className="w-2/3 overflow-y-auto p-6 flex flex-col">
+                
+                {/* Variant Label Setup */}
+                <div className="mb-6 p-4 bg-slate-50 border border-slate-100 rounded-lg">
+                  <h3 className="font-bold text-gray-800 mb-1">Tên phân loại</h3>
+                  <p className="text-xs text-gray-500 mb-3">Tên dùng để hiển thị nhóm biến thể trên trang chi tiết sản phẩm.</p>
+                  
+                  <div className="flex gap-2 items-center">
+                    <input 
+                      type="text" 
+                      maxLength={50}
+                      list="variant-label-suggestions"
+                      value={variantLabel}
+                      onChange={(e) => setVariantLabel(e.target.value)}
+                      className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-500 outline-none"
+                    />
+                    <datalist id="variant-label-suggestions">
+                      <option value="Phân loại" />
+                      <option value="Hương vị" />
+                      <option value="Mùi hương" />
+                      <option value="Màu sắc" />
+                      <option value="Dung tích" />
+                      <option value="Kích thước" />
+                      <option value="Độ mềm" />
+                      <option value="Quy cách" />
+                    </datalist>
                     <button 
-                      onClick={startAdd}
-                      className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      onClick={handleSaveLabel}
+                      disabled={labelLoading}
+                      className="flex items-center gap-1 bg-blue-600 text-white px-3 py-2 rounded-lg text-sm hover:bg-blue-700 disabled:opacity-50 transition-colors"
                     >
-                      Thêm biến thể đầu tiên
+                      <Save className="w-4 h-4" />
+                      {labelLoading ? 'Đang lưu...' : 'Lưu'}
                     </button>
                   </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <h3 className="font-bold text-lg text-gray-800 mb-4 border-b pb-2">
-                      {isAdding ? 'Thêm biến thể mới' : `Chỉnh sửa: ${editingVariant?.name}`}
-                    </h3>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Tên vị/biến thể *</label>
-                        <input defaultValue={editingVariant?.name} required onChange={handleSlugify} name="name" type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: Vị dâu" />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
-                        <input defaultValue={editingVariant?.slug} required name="slug" type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="vi-dau" />
-                      </div>
+                  {labelMessage && (
+                    <div className={`mt-2 text-xs ${labelMessage.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
+                      {labelMessage.text}
                     </div>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  {message && (
+                    <div className={`p-4 mb-6 rounded-lg ${message.type === 'success' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                      {message.text}
+                    </div>
+                  )}
+
+                  {(!isAdding && !editingVariant) ? (
+                    <div className="h-full flex flex-col items-center justify-center text-gray-400">
+                      <Palette className="w-16 h-16 mb-4 opacity-20" />
+                      <p>Chọn một biến thể để chỉnh sửa hoặc tạo mới</p>
+                      <button 
+                        onClick={startAdd}
+                        className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+                      >
+                        Thêm biến thể đầu tiên
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                      <h3 className="font-bold text-lg text-gray-800 mb-4 border-b pb-2">
+                        {isAdding ? 'Thêm biến thể mới' : `Chỉnh sửa: ${editingVariant?.name}`}
+                      </h3>
+
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Giá trị phân loại *</label>
+                          <input defaultValue={editingVariant?.name} required onChange={handleSlugify} name="name" type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="VD: Vị dâu, Xanh, 500ml..." />
+                        </div>
+                      
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+                          <input defaultValue={editingVariant?.slug} required name="slug" type="text" className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="vi-dau" />
+                        </div>
+                      </div>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div>
@@ -326,7 +386,8 @@ export default function ProductVariantsModal({ product, variants = [] }: { produ
             </div>
           </div>
         </div>
-      )}
-    </>
-  );
+      </div>
+    )}
+  </>
+);
 }

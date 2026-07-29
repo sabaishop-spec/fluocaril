@@ -200,3 +200,27 @@ export async function setDefaultProductVariant(id: number, productId: number) {
     return { success: false, error: error.message || 'Lỗi khi đặt mặc định' };
   }
 }
+
+export async function updateProductVariantLabel(productId: number, label: string) {
+  try {
+    const cleanLabel = label.trim().substring(0, 50) || 'Phân loại';
+    
+    await db.update(products).set({
+      variantLabel: cleanLabel,
+    }).where(eq(products.id, productId));
+
+    const product = await db.query.products.findFirst({ where: eq(products.id, productId) });
+    
+    revalidatePath('/admin/products');
+    revalidatePath('/san-pham');
+    revalidatePath('/');
+    if (product) {
+      revalidatePath(`/san-pham/${product.slug}`);
+    }
+    
+    return { success: true };
+  } catch (error: any) {
+    console.error('Error updating product variant label:', error);
+    return { success: false, error: error.message || 'Lỗi khi cập nhật tên phân loại' };
+  }
+}
