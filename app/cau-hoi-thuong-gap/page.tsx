@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { Accordion } from "@/components/ui";
 import { faqs } from "@/lib/data";
 import type { Metadata } from 'next';

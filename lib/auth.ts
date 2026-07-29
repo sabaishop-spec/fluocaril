@@ -1,11 +1,11 @@
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
-
-const SECRET_KEY = process.env.ADMIN_SESSION_SECRET || 'default_secret_key_for_development_only';
-const key = new TextEncoder().encode(SECRET_KEY);
 
 export async function createAdminSession() {
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (!secret) return;
+
+  const key = new TextEncoder().encode(secret);
   const token = await new SignJWT({ role: 'admin' })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -30,10 +30,13 @@ export async function clearAdminSession() {
 export async function getAdminSession() {
   const cookieStore = await cookies();
   const token = cookieStore.get('admin_session')?.value;
-
   if (!token) return null;
 
+  const secret = process.env.ADMIN_SESSION_SECRET;
+  if (!secret) return null;
+
   try {
+    const key = new TextEncoder().encode(secret);
     const { payload } = await jwtVerify(token, key, {
       algorithms: ['HS256'],
     });

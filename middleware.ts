@@ -2,15 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { jwtVerify } from 'jose';
 
-const SECRET_KEY = process.env.ADMIN_SESSION_SECRET || 'default_secret_key_for_development_only';
-const key = new TextEncoder().encode(SECRET_KEY);
-
 export async function middleware(req: NextRequest) {
   const token = req.cookies.get('admin_session')?.value;
   let isValid = false;
+  
+  const secret = process.env.ADMIN_SESSION_SECRET;
 
-  if (token) {
+  if (token && secret) {
     try {
+      const key = new TextEncoder().encode(secret);
       await jwtVerify(token, key, { algorithms: ['HS256'] });
       isValid = true;
     } catch (error) {
@@ -24,9 +24,11 @@ export async function middleware(req: NextRequest) {
     }
     return NextResponse.next();
   }
-
-  if (!isValid) {
-    return NextResponse.redirect(new URL('/login', req.url));
+  
+  if (req.nextUrl.pathname.startsWith('/admin')) {
+    if (!isValid) {
+      return NextResponse.redirect(new URL('/login', req.url));
+    }
   }
 
   return NextResponse.next();

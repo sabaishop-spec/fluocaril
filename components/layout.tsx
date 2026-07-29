@@ -89,32 +89,19 @@ export function Header({ categories = [] }: { categories?: any[] }) {
   );
 }
 
-export function Footer({ categories = [] }: { categories?: any[] }) {
-  const [data, setData] = useState(() => {
-    // initial default values
-    const defaults = {
-      description: 'Thương hiệu chăm sóc răng miệng chuyên biệt đồng hành cùng người dùng trong từng giai đoạn chỉnh nha.',
-      address: 'Tòa nhà ABC, Đường XYZ, Hà Nội',
-      phone: '1900 1234',
-      email: 'contact@fluocaril.vn',
-      facebook: '#',
-      instagram: '#',
-      tiktok: '#',
-      copyright: `© ${new Date().getFullYear()} Fluocaril Vietnam. All rights reserved.`
-    };
-    
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('site_footer');
-      if (saved) {
-        try {
-          return { ...defaults, ...JSON.parse(saved) };
-        } catch (e) {
-          console.error("Failed to parse saved footer data", e);
-        }
-      }
-    }
-    return defaults;
-  });
+export function Footer({ categories = [], footerData = null }: { categories?: any[], footerData?: any }) {
+  const defaults = {
+    description: 'Thương hiệu chăm sóc răng miệng chuyên biệt đồng hành cùng người dùng trong từng giai đoạn chỉnh nha.',
+    address: 'Hà Nội, Việt Nam',
+    phone: '090 123 4567',
+    email: 'contact@fluocaril.vn',
+    facebook: '',
+    instagram: '',
+    tiktok: '',
+    copyright: `© ${new Date().getFullYear()} Fluocaril Vietnam. All rights reserved.`
+  };
+  
+  const data = footerData ? { ...defaults, ...footerData } : defaults;
 
   return (
     <footer className="bg-slate-50 pt-20 pb-10 border-t border-slate-200">
@@ -165,15 +152,21 @@ export function Footer({ categories = [] }: { categories?: any[] }) {
               <li><Link href="#" className="hover:text-brand-dark transition-colors">Điều khoản sử dụng</Link></li>
             </ul>
             <div className="flex items-center gap-3">
-               <Link href={data.facebook} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
-                 <i className="fa-brands fa-facebook text-xl"></i>
-               </Link>
-               <Link href={data.instagram} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
-                 <i className="fa-brands fa-instagram text-xl"></i>
-               </Link>
-               <Link href={data.tiktok} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
-                 <i className="fa-brands fa-tiktok text-xl"></i>
-               </Link>
+               {data.facebook && (
+                 <Link href={data.facebook} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+                   <i className="fa-brands fa-facebook text-xl"></i>
+                 </Link>
+               )}
+               {data.instagram && (
+                 <Link href={data.instagram} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+                   <i className="fa-brands fa-instagram text-xl"></i>
+                 </Link>
+               )}
+               {data.tiktok && (
+                 <Link href={data.tiktok} className="w-10 h-10 rounded-full bg-navy text-white hover:text-[#2DD4BF] flex items-center justify-center transition-colors">
+                   <i className="fa-brands fa-tiktok text-xl"></i>
+                 </Link>
+               )}
             </div>
           </div>
         </div>

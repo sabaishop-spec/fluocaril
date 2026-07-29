@@ -1,11 +1,10 @@
 import pg from 'pg';
-
 const { Client } = pg;
 
 async function runMigration() {
   if (!process.env.DATABASE_URL) {
     console.warn('DATABASE_URL is not set. Skipping migration.');
-    process.exit(0);
+    process.exit(1);
   }
 
   const client = new Client({
@@ -15,9 +14,7 @@ async function runMigration() {
   try {
     await client.connect();
     console.log('Connected to database. Running migration...');
-
     await client.query('BEGIN');
-
     await client.query(`
       ALTER TABLE public.products
         ADD COLUMN IF NOT EXISTS ingredients text,
@@ -57,8 +54,25 @@ async function runMigration() {
 
       CREATE INDEX IF NOT EXISTS idx_product_description_images_product_id ON public.product_description_images(product_id);
       CREATE INDEX IF NOT EXISTS idx_product_description_images_sort ON public.product_description_images(product_id, sort_order);
-    `);
 
+      CREATE TABLE IF NOT EXISTS public.site_settings (
+        id SERIAL PRIMARY KEY,
+        key text NOT NULL UNIQUE,
+        value jsonb,
+        created_at timestamp DEFAULT now()
+      );
+
+      CREATE TABLE IF NOT EXISTS public.login_attempts (
+        id SERIAL PRIMARY KEY,
+        ip_hash TEXT NOT NULL UNIQUE,
+        attempts INTEGER DEFAULT 1,
+        last_attempt TIMESTAMP DEFAULT now(),
+        lock_until TIMESTAMP
+      );
+
+      CREATE UNIQUE INDEX IF NOT EXISTS idx_login_attempts_ip_hash
+      ON public.login_attempts(ip_hash);
+    `);
     await client.query('COMMIT');
     console.log('Migration completed successfully.');
   } catch (error) {
@@ -68,7 +82,7 @@ async function runMigration() {
     } catch (e) {
       console.error('Could not rollback:', e.message);
     }
-    process.exit(0);
+    process.exit(1);
   } finally {
     try {
       await client.end();

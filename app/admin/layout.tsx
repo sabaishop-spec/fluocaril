@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, Package, FileText, Users, Tags, Settings, Image as ImageIcon, LayoutTemplate, PanelBottom, LogOut } from 'lucide-react';

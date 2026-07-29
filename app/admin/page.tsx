@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { Package, FileText, LayoutDashboard, Clock } from 'lucide-react';
 import AdminToast from '@/components/AdminToast';
 import { db } from '@/src/db';

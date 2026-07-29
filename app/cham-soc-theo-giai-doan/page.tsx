@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import { ShopByStage } from "@/components/home-sections-1";
 import { CareRoutine, WhySpecialized } from "@/components/home-sections-2";
 import type { Metadata } from 'next';

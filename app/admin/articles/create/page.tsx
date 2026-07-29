@@ -1,3 +1,4 @@
+export const dynamic = 'force-dynamic';
 import ArticleForm from '@/app/admin/articles/ArticleForm';
 import Link from 'next/link';
 import { ChevronLeft } from 'lucide-react';

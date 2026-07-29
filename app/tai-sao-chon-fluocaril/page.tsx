@@ -1,8 +1,8 @@
-"use client";
-
+export const dynamic = 'force-dynamic';
 import Link from "next/link";
-import { AlertCircle, Bug, Flame, CheckCircle, ChevronRight } from "lucide-react";
-import { useState, useEffect } from "react";
+import { AlertCircle, Bug, Flame, CheckCircle, ChevronRight, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
+import { getSetting } from "@/src/db/settings";
 
 interface Step {
   id: string;
@@ -11,39 +11,36 @@ interface Step {
   imagePreview: string | null;
 }
 
-export default function TaiSaoChonFluocaril() {
-  const [steps, setSteps] = useState<Step[]>(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('landing_page_steps');
-      if (saved) {
-        try {
-          return JSON.parse(saved);
-        } catch (e) {
-          console.error("Failed to parse saved steps", e);
-        }
-      }
+export default async function TaiSaoChonFluocaril() {
+  let steps: Step[] = [
+    {
+      id: 'step-1',
+      title: 'Chải răng',
+      description: 'Sử dụng bàn chải rãnh chữ V thiết kế riêng biệt để làm sạch hoàn hảo cả bề mặt mắc cài lẫn kẽ răng xung quanh.',
+      imagePreview: null,
+    },
+    {
+      id: 'step-2',
+      title: 'Làm sạch kẽ',
+      description: 'Len lỏi vào những vị trí hẹp nhất dưới dây cung và giữa các kẽ răng để loại bỏ triệt để mảnh vụn thức ăn cứng đầu.',
+      imagePreview: null,
+    },
+    {
+      id: 'step-3',
+      title: 'Súc miệng',
+      description: 'Tăng cường màng bảo vệ Fluoride, tái khoáng hóa men răng và diệt khuẩn toàn diện cho khoang miệng thơm mát dài lâu.',
+      imagePreview: null,
+    },
+  ];
+
+  try {
+    const savedSteps = await getSetting('landing_page_steps');
+    if (savedSteps && Array.isArray(savedSteps) && savedSteps.length > 0) {
+      steps = savedSteps;
     }
-    return [
-      {
-        id: 'step-1',
-        title: 'Chải răng',
-        description: 'Sử dụng bàn chải rãnh chữ V thiết kế riêng biệt để làm sạch hoàn hảo cả bề mặt mắc cài lẫn kẽ răng xung quanh.',
-        imagePreview: null,
-      },
-      {
-        id: 'step-2',
-        title: 'Làm sạch kẽ',
-        description: 'Len lỏi vào những vị trí hẹp nhất dưới dây cung và giữa các kẽ răng để loại bỏ triệt để mảnh vụn thức ăn cứng đầu.',
-        imagePreview: null,
-      },
-      {
-        id: 'step-3',
-        title: 'Súc miệng',
-        description: 'Tăng cường màng bảo vệ Fluoride, tái khoáng hóa men răng và diệt khuẩn toàn diện cho khoang miệng thơm mát dài lâu.',
-        imagePreview: null,
-      },
-    ];
-  });
+  } catch (e) {
+    console.error("Failed to load landing page steps", e);
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -120,11 +117,14 @@ export default function TaiSaoChonFluocaril() {
               <div key={step.id} className="flex flex-col items-center text-center">
                 <div className="w-full aspect-video bg-emerald-700/50 rounded-2xl mb-8 flex items-center justify-center overflow-hidden relative shadow-sm">
                   {step.imagePreview ? (
-                    <img src={step.imagePreview} className="w-full h-full object-cover" alt={step.title} />
+                    <Image src={step.imagePreview} fill className="object-cover" alt={step.title} />
                   ) : (
-                    <div className="text-emerald-300 font-medium">Hình ảnh placeholder</div>
+                    <div className="text-emerald-300 font-medium flex flex-col items-center gap-2">
+                      <ImageIcon className="w-8 h-8" />
+                      <span>Chưa có ảnh</span>
+                    </div>
                   )}
-                  <div className="absolute top-4 left-4 w-10 h-10 bg-white text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl">{index + 1}</div>
+                  <div className="absolute top-4 left-4 w-10 h-10 bg-white text-emerald-600 rounded-full flex items-center justify-center font-bold text-xl z-10">{index + 1}</div>
                 </div>
                 <h3 className="text-2xl font-bold mb-4 flex items-center justify-center gap-2">
                   <CheckCircle className="w-6 h-6 text-emerald-300" />

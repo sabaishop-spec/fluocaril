@@ -9,28 +9,35 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage('');
+    setIsSubmitting(true);
     
-    const formData = new FormData();
-    formData.append('email', email);
-    formData.append('password', password);
-
-    const result = await loginAction(formData);
-
-    if (result.success) {
-      setIsSuccess(true);
-      setMessage(result.message);
-      setTimeout(() => {
-        router.push('/admin');
+    try {
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+      
+      const result = await loginAction(null, formData);
+      
+      if (result && result.success) {
+        setIsSuccess(true);
+        setMessage('');
+        router.replace('/admin');
         router.refresh();
-      }, 1000);
-    } else {
+      } else {
+        setIsSuccess(false);
+        setMessage(result?.message || 'Đã xảy ra lỗi không xác định.');
+      }
+    } catch (err) {
       setIsSuccess(false);
-      setMessage(result.message);
+      setMessage('Không thể kết nối hệ thống đăng nhập. Vui lòng thử lại.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -40,14 +47,46 @@ export default function LoginPage() {
         <h1 className="text-2xl font-bold text-center mb-6">Đăng nhập Quản trị</h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <input type="email" placeholder="Địa chỉ email" value={email} onChange={(e) => setEmail(e.target.value)} className="w-full p-3 rounded-lg bg-[#e8f0fe] border border-gray-200 outline-none text-gray-800" required />
+            <input 
+              type="email" 
+              name="email"
+              placeholder="Địa chỉ email" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              className="w-full p-3 rounded-lg bg-[#e8f0fe] border border-gray-200 outline-none text-gray-800" 
+              required 
+              disabled={isSubmitting}
+              autoComplete="username"
+            />
           </div>
           <div>
-            <input type="password" placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} className="w-full p-3 rounded-lg bg-gray-900 text-white border border-gray-700 outline-none" required />
+            <input 
+              type="password" 
+              name="password"
+              placeholder="Mật khẩu" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              className="w-full p-3 rounded-lg bg-gray-900 text-white border border-gray-700 outline-none" 
+              required 
+              disabled={isSubmitting}
+              autoComplete="current-password"
+            />
           </div>
-          {message && <p className={`text-sm text-center font-semibold ${isSuccess ? 'text-emerald-600' : 'text-red-500'}`}>{message}</p>}
-          <button type="submit" disabled={isSuccess} className={`w-full p-3 rounded-lg font-bold text-white transition-colors ${isSuccess ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#4ba3a3] hover:bg-teal-600'}`}>
-            {isSuccess ? 'Đang tải...' : 'Đăng nhập'}
+          
+          {message && (
+            <div role="alert" aria-live="polite">
+              <p className={`text-sm text-center font-semibold ${isSuccess ? 'text-emerald-600' : 'text-red-500'}`}>
+                {message}
+              </p>
+            </div>
+          )}
+          
+          <button 
+            type="submit" 
+            disabled={isSubmitting} 
+            className={`w-full p-3 rounded-lg font-bold text-white transition-colors ${isSubmitting ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#4ba3a3] hover:bg-teal-600'}`}
+          >
+            {isSubmitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
           </button>
         </form>
       </div>
