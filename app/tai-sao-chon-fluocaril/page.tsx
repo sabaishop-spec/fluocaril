@@ -117,7 +117,7 @@ export default async function TaiSaoChonFluocaril() {
               <div key={step.id} className="flex flex-col items-center text-center">
                 <div className="w-full aspect-video bg-emerald-700/50 rounded-2xl mb-8 flex items-center justify-center overflow-hidden relative shadow-sm">
                   {step.imagePreview ? (
-                    <Image src={step.imagePreview} fill className="object-cover" alt={step.title} />
+                    <Image src={step.imagePreview} fill className="object-cover" alt={step.title} referrerPolicy="no-referrer" />
                   ) : (
                     <div className="text-emerald-300 font-medium flex flex-col items-center gap-2">
                       <ImageIcon className="w-8 h-8" />

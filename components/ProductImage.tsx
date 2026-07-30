@@ -8,12 +8,14 @@ export function ProductImage({
   src, 
   alt, 
   className,
-  priority
+  priority,
+  sizes
 }: { 
   src: string; 
   alt: string; 
   className?: string;
   priority?: boolean;
+  sizes?: string;
 }) {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,12 +29,14 @@ export function ProductImage({
         alt={alt || "Product image"}
         fill
         priority={priority}
+        sizes={sizes || "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"}
         className={cn(
           "object-cover transition-all duration-700 z-10",
           isLoading ? "opacity-0 scale-95" : "opacity-100 scale-100",
           className
         )}
         onLoad={() => setIsLoading(false)}
+        referrerPolicy="no-referrer"
       />
     </>
   );

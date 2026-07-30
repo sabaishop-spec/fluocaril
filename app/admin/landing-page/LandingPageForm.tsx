@@ -161,6 +161,7 @@ export function LandingPageForm({ initialSteps }: { initialSteps: Step[] | null 
                       alt={step.title} 
                       fill
                       className="object-cover"
+                      referrerPolicy="no-referrer"
                     />
                   ) : (
                     <div className="flex flex-col items-center justify-center text-gray-400">

@@ -142,7 +142,7 @@ export function HeroIntro() {
               Khám phá sản phẩm
             </Link>
             <Link
-              href="#tai-sao-can-san-pham-chuyen-biet"
+              href="/tai-sao-chon-fluocaril"
               className="inline-flex items-center justify-center h-11 px-8 rounded-full text-base font-semibold border-2 border-brand text-brand bg-white hover:bg-brand-light transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
             >
               Tìm hiểu thêm

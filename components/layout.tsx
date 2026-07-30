@@ -54,9 +54,9 @@ export function Header({ categories = [] }: { categories?: any[] }) {
             </Link>
             <div className="absolute top-full left-0 pt-4 hidden group-hover:flex flex-col z-50 min-w-[240px] transition-all duration-300">
               <div className="bg-white shadow-xl rounded-xl p-3 border border-slate-100 flex flex-col">
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Kiến thức chỉnh nha tổng quát</Link>
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Hướng dẫn vệ sinh đúng cách</Link>
-                <Link href="#" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Dinh dưỡng cho răng niềng</Link>
+                <Link href="/goc-kien-thuc" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Kiến thức chỉnh nha tổng quát</Link>
+                <Link href="/goc-kien-thuc" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Hướng dẫn vệ sinh đúng cách</Link>
+                <Link href="/goc-kien-thuc" className="text-slate-700 text-sm py-2.5 px-4 rounded-lg hover:bg-slate-50 hover:text-[#84EF6E] transition-colors">Dinh dưỡng cho răng niềng</Link>
               </div>
             </div>
           </div>
@@ -148,8 +148,8 @@ export function Footer({ categories = [], footerData = null }: { categories?: an
             <h4 className="font-bold text-navy mb-4 font-serif">Thông tin pháp lý & Hỗ trợ</h4>
             <ul className="space-y-3 text-sm text-slate-600 mb-6">
               <li><Link href="/cau-hoi-thuong-gap" className="hover:text-brand-dark transition-colors">Câu hỏi thường gặp</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Chính sách bảo mật</Link></li>
-              <li><Link href="#" className="hover:text-brand-dark transition-colors">Điều khoản sử dụng</Link></li>
+              <li><Link href="/chinh-sach-bao-mat" className="hover:text-brand-dark transition-colors">Chính sách bảo mật</Link></li>
+              <li><Link href="/dieu-khoan-su-dung" className="hover:text-brand-dark transition-colors">Điều khoản sử dụng</Link></li>
             </ul>
             <div className="flex items-center gap-3">
                {data.facebook && (

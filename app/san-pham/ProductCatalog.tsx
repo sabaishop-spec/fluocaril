@@ -459,15 +459,13 @@ function CatalogContent({ products, categories }: { products: any[], categories:
       )}
       </AnimatePresence>
 
-
       {/* Product Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
-          {displayedProducts.map((prod) => {
+          {displayedProducts.map((prod, index) => {
             const activeVariant = getActiveVariant(prod);
             const currentImage = activeVariant?.imageUrl || prod.imageUrl || prod.image || "https://picsum.photos/seed/placeholder/400/533";
             const variants = prod.variants || [];
-
             return (
             <Link href={`/san-pham/${prod.slug}${activeVariant ? `?variant=${activeVariant.slug}` : ''}`} key={prod.id} className="group block cursor-pointer">
               <motion.div
@@ -480,6 +478,8 @@ function CatalogContent({ products, categories }: { products: any[], categories:
                 <ProductImage
                   src={currentImage}
                   alt={prod.name}
+                  priority={index === 0}
+                  sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   className="object-contain p-3 sm:p-5 md:p-8 group-hover:scale-105"
                 />
 
@@ -540,6 +540,7 @@ function CatalogContent({ products, categories }: { products: any[], categories:
                         onClick={(e) => handleVariantSelect(e, prod.id, v)}
                         title={v.name}
                         aria-label={v.name}
+                        aria-pressed={activeVariant?.id === v.id}
                         className={cn(
                           "w-5 h-5 rounded-full border shadow-sm",
                           activeVariant?.id === v.id ? "ring-2 ring-teal-500 ring-offset-2 border-transparent" : "border-gray-200 hover:scale-110 transition-transform"

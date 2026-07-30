@@ -242,15 +242,20 @@ export default async function ProductDetailPage({ params, searchParams }: Props)
                     key={v.id}
                     href={`?variant=${v.slug}`}
                     scroll={false}
-                    title={v.name}
-                    aria-label={v.name}
-                    className={`w-9 h-9 rounded-full border shadow-sm transition-transform ${
-                      activeVariant?.id === v.id 
-                        ? "ring-2 ring-teal-500 ring-offset-2 border-transparent scale-110" 
-                        : "border-gray-200 hover:scale-110"
-                    }`}
-                    style={{ backgroundColor: v.swatchColor }}
-                  />
+                    passHref
+                  >
+                    <button
+                      title={v.name}
+                      aria-label={v.name}
+                      aria-pressed={activeVariant?.id === v.id}
+                      className={`w-9 h-9 rounded-full border shadow-sm transition-transform ${
+                        activeVariant?.id === v.id 
+                          ? "ring-2 ring-teal-500 ring-offset-2 border-transparent scale-110" 
+                          : "border-gray-200 hover:scale-110"
+                      }`}
+                      style={{ backgroundColor: v.swatchColor }}
+                    />
+                  </Link>
                 ))}
               </div>
             </div>

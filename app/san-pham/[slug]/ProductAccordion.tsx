@@ -24,6 +24,8 @@ export function ProductAccordion({ items }: { items: AccordionItem[] }) {
           <div key={index} className="border border-slate-200 rounded-xl overflow-hidden bg-white">
             <button
               onClick={() => toggle(index)}
+              aria-expanded={isOpen}
+              aria-controls={`accordion-content-${index}`}
               className="w-full flex items-center justify-between px-5 py-4 text-left focus:outline-none hover:bg-slate-50 transition-colors"
             >
               <span className="font-semibold text-slate-900">{item.title}</span>
@@ -35,6 +37,7 @@ export function ProductAccordion({ items }: { items: AccordionItem[] }) {
               />
             </button>
             <div 
+              id={`accordion-content-${index}`}
               className={cn(
                 "grid transition-all duration-300 ease-in-out",
                 isOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
