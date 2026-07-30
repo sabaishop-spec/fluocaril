@@ -63,7 +63,7 @@ export async function loginAction(prevState: any, formData: FormData) {
     if (!isMatch) {
       try {
         if (attemptRecord) {
-          const newAttempts = attemptRecord.attempts + 1;
+          const newAttempts = (attemptRecord.attempts ?? 0) + 1;
           let lockUntil = null;
           if (newAttempts >= 5) {
             lockUntil = new Date(Date.now() + 15 * 60 * 1000); // 15 mins
