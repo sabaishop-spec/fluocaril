@@ -2,7 +2,7 @@
 
 import { cookies, headers } from 'next/headers';
 import { SignJWT } from 'jose';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import { db } from '@/src/db';
 import { loginAttempts } from '@/src/db/schema';
