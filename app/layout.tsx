@@ -27,9 +27,6 @@ export const metadata: Metadata = {
     locale: 'vi_VN',
     type: 'website',
   },
-  icons: {
-    icon: '/favicon.ico',
-  }
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
